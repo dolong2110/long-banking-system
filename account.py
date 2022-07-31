@@ -119,9 +119,9 @@ def authentication() -> Optional[Users]:
     print(" Welcome to Long's Bank\n")
     print("Please choose 1 if you already have an account or 2 if you want to create a new one\n")
     print("  ┌─────────────┐  ╭──────────────────╮                ")
-    print("  │  L O N G    │  │ ▶︎ 1 • Login   │               ")
+    print("  │  L O N G    │  │ ▶︎ 1 • Login      │                ")
     print("  │  T U A N    │  ├──────────────────┴────────────╮   ")
-    print("  │  B A N K    │  │ ▶︎ 2 • Create New Account   │   ")
+    print("  │  B A N K    │  │ ▶︎ 2 • Create New Account      │   ")
     print("  └─────────────┘  ╰───────────────────────────────╯   ")
 
     time.sleep(1)
@@ -201,7 +201,11 @@ def authentication() -> Optional[Users]:
         if not last_name:
             return None
 
-
+        gender = get_gender(consts.GENDER_OPTION_LIST)
+        if not gender:
+            return None
+        
+        
 
     return users
 
@@ -216,19 +220,48 @@ def get_name(name_max_len: int, failed_attempt: int, kind: str) -> str:
         else:
             break
 
-        if not failed_attempt:
-            print("You enter invalid %s name many times, please wait few minutes to create new account again")
-            name = ""
+    if not failed_attempt:
+        print("You enter invalid %s name many times, please wait few minutes to create new account again")
+        name = ""
 
     return name
 
-def gen_gender(gender_list: List[str]) -> str:
+def get_gender(gender_list: List[str]) -> str:
     print("Please choose among options below\n")
 
-    print("  ┌─────────────┐  ╭────────────────╮      ")
-    print("  │             │  │ ▶︎ 1 • Male  │      ")
-    print("  │  L O N G    │  ├────────────────┴─╮    ")
-    print("  │  T U A N    │  │ ▶︎ 2 • Female  │    ")
+    print("  ┌─────────────┐  ╭────────────────╮       ")
+    print("  │             │  │ ▶︎ 1 • Male     │       ")
+    print("  │  L O N G    │  ├────────────────┴─╮     ")
+    print("  │  T U A N    │  │ ▶︎ 2 • Female     │     ")
     print("  │  B A N K    │  ├──────────────────┴╮    ")
-    print("  │             │  │ ▶︎ 3 • Others   │   ")
+    print("  │             │  │ ▶︎ 3 • Others      │    ")
     print("  └─────────────┘  ╰────────────────── ╯    ")
+    
+    failed_attempt = consts.FAILED_ATTEMPT
+    gender = ""
+    while failed_attempt:
+        gender = input("Please enter your choice about your gender: \n")
+        if gender not in gender_list:
+            failed_attempt -= 1
+            print("Invalid choice please read carefully, choose 1 for male, 2 for female and 3 for others\n")
+            print("You have %d try left!!!\n" % failed_attempt)
+        else:
+            break
+    if not failed_attempt:
+        print("You enter invalid choice many times, please wait a few minutes to try it again!!!")
+        return ""
+    
+    if gender == "1":
+        return "male"
+    
+    if gender == "2":
+        return "female"
+    
+    if gender == "3":
+        return "others"
+    
+    return ""
+
+def get_date_of_birth() -> str:
+    print("Please enter the year, month, day when you was born respectively!!!")
+    year = utils.get_time()
