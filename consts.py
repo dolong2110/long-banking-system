@@ -7,4 +7,8 @@ FIRST_NAME_MAX_LEN =256
 MIDDLE_NAME_MAX_LEN = 128
 LAST_NAME_MAX_LEN = 128
 NOT_ALLOW_NAME_CHARACTER = """`1234567890-=~!@#$%^&*()_+[]\;',./{}|:"<>?"""
-GENDER_LIST = ["Male", "Female", "Others"]
+GENDER_SET = {"Male", "Female", "Others"}
+PHONE_NUMBER_LEN = 10
+MIN_PASSWORD_LEN = 8
+MAX_PASSWORD_LEN = 100
+SPECIAL_CHARACTERS = ["""(~!@#$%^&*_-+=`|(){}[]:;"'<>,.?/)"""]

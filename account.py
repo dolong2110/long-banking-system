@@ -1,3 +1,4 @@
+import getpass
 import json
 import random
 import time
@@ -56,25 +57,24 @@ class Users:
 class User:
 
     def __init__(self, first_name: str, middle_name: str, last_name: str, gender: str, age: int,
-                 birth_date: str, account_number: str, password: str, phone_number: str, email: str,
-                 issued_date: str, issued_place: str):
+                 date_of_birth: str, account_number: str, password: str, phone_number: str, email: str,
+                 issued_date: str):
         self.first_name = first_name
         self.middle_name = middle_name
         self.last_name = last_name
         self.gender = gender
         self.age = age
-        self.birth_date = birth_date
+        self.date_of_birth = date_of_birth
         self.account_number = account_number
         self.password = password
         self.phone_number = phone_number
         self.email = email
         self.issued_date = issued_date
-        self.issued_place = issued_place
 
     def get_information(self):
         print(f"\nPersonal Information\nFirst name: {self.first_name}\n"
               f"Middle name: {self.middle_name}\nLast name: {self.last_name}\n"
-              f"Age: {self.age}\nDate of Birth: {self.birth_date} ")
+              f"Age: {self.age}\nDate of Birth: {self.date_of_birth} ")
 
     def create_new(self, account_number_dict) -> str:
         """
@@ -201,11 +201,27 @@ def authentication() -> Optional[Users]:
         if not last_name:
             return None
 
-        gender = get_gender(consts.GENDER_OPTION_LIST)
+        gender = get_gender(consts.GENDER_SET)
         if not gender:
             return None
         
-        
+        date_of_birth = get_date_of_birth()
+        if not date_of_birth:
+            return None
+
+        phone_number = get_phone_number()
+        if not phone_number:
+            return None
+
+        email = get_email()
+
+        password = get_password()
+        if not password:
+            return None
+
+        issued_date = time.strftime("%d/%m/%Y")
+
+
 
     return users
 
@@ -250,10 +266,10 @@ def get_gender(gender_list: List[str]) -> str:
     if not failed_attempt:
         print("You enter invalid choice many times, please wait a few minutes to try it again!!!")
         return ""
-    
+
     if gender == "1":
         return "male"
-    
+
     if gender == "2":
         return "female"
 
@@ -264,6 +280,118 @@ def get_gender(gender_list: List[str]) -> str:
 
 def get_date_of_birth() -> str:
     print("Please enter the year, month, day when you was born respectively!!!")
-    year = utils.get_time()
+    current_time = time.strftime("%d:%m:%Y")
+    current_time_list = current_time.split(":")
+    current_day, current_month, current_year = current_time_list
 
-    return ""
+    year = utils.get_temporal("year", current_year)
+    if not year:
+        return ""
+    
+    month = utils.get_temporal("month", 12)
+    if not month:
+        return ""
+
+    day = utils.get_temporal("day", 31)
+    if not day:
+        return ""
+
+    if not utils.is_valid_day([int(day), int(month), int(year)], [int(current_day), int(current_month), int(current_year)]):
+        return ""
+
+    return day + ":" + month + ":" + year
+
+def get_phone_number() -> str:
+    failed_attempt = consts.FAILED_ATTEMPT
+    phone_number = ""
+    while failed_attempt:
+        phone_number = input("Please enter your phone number: \n")
+        if not utils.is_valid_phone_number(phone_number):
+            failed_attempt -= 1
+            print("Invalid phone number, please, try it again!!!\n")
+            print("You have %d try left!!!\n" % failed_attempt)
+        else:
+            break
+    if not failed_attempt:
+        print("You enter invalid choice many times, please wait a few minutes to try it again!!!")
+        phone_number = ""
+
+    return phone_number
+
+def get_email() -> str:
+    print("Do you want to add your email? if YES press 1 or 2 if NO")
+    print("  ┌─────────────┐  ╭────────────────╮    ")
+    print("  │  L O N G    │  │ ▶︎ 1 • YES   │    ")
+    print("  │  T U A N    │  ├───────────────┬╯    ")
+    print("  │  B A N K    │  │ ▶︎ 2 • NO   │     ")
+    print("  └─────────────┘  ╰───────────────╯     ")
+
+    time.sleep(0.5)
+
+    failed_attempt = consts.FAILED_ATTEMPT
+    user_choice = ""
+    while failed_attempt:
+        user_choice = input("☞ Enter your choice: \n")
+        if user_choice not in {"1", "2"}:
+            failed_attempt -= 1
+            print("Wrong choice!!! Please choose only 1 or 2\n")
+            print("You have %d try left!!!\n" % failed_attempt)
+        else:
+            break
+
+    if not failed_attempt:
+        print("You enter wrong choice many times, please wait few minutes to do it again\n")
+        return ""
+
+    if user_choice == "2":
+        return ""
+
+    email = ""
+    failed_attempt = consts.FAILED_ATTEMPT
+    while failed_attempt:
+        email = input("Please enter your email: \n")
+        if not utils.is_valid_email(email):
+            failed_attempt -= 1
+            print("Invalid email, please, try it again!!!\n")
+            print("You have %d try left!!!\n" % failed_attempt)
+        else:
+            break
+
+    if not failed_attempt:
+        print("You enter invalid choice many times, please wait a few minutes to try it again!!!")
+        email = ""
+
+    return email
+
+def get_password() -> str:
+    password = ""
+    failed_attempt = consts.FAILED_ATTEMPT
+    while failed_attempt:
+        password = getpass.getpass("Please enter your password. It should be at least 8 characters, "
+                                   "contain numbers, lowercase, uppercase letters, and special characters: \n")
+        if not utils.is_valid_password(password):
+            failed_attempt -= 1
+            print("Invalid password. Please, try it again!!!\n")
+            print("You have %d try left!!!\n" % failed_attempt)
+        else:
+            break
+
+    if not failed_attempt:
+        print("You enter invalid choice many times, please wait a few minutes to try it again!!!")
+        password = ""
+
+    failed_attempt = consts.FAILED_ATTEMPT
+    while failed_attempt:
+        re_enter_password = getpass.getpass("Please re-enter your password: \n")
+        if password != re_enter_password:
+            failed_attempt -= 1
+            print("Different with your previous password. Please, try it again!!!\n")
+            print("You have %d try left!!!\n" % failed_attempt)
+        else:
+            break
+
+    if not failed_attempt:
+        print("You enter invalid choice many times, please wait a few minutes to try it again!!!")
+        password = ""
+
+    return password
