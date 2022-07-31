@@ -35,8 +35,25 @@ def check_password(plain_text_password: str, hashed_password: str) -> bool:
 
     return bcrypt.checkpw(str.encode(plain_text_password), str.encode(hashed_password))
 
+def is_valid_name(name: str, max_len: int) -> bool:
+    if len(name) > max_len or len(name) == 0:
+        return False
+
+    set_character = set(name)
+    for character in set_character:
+        if character in consts.NOT_ALLOW_NAME_CHARACTER:
+            return False
+    return True
+
 if __name__ == '__main__':
     print(greeting())
     print(generate_hashed_password("longdeptrai"))
     print(check_password("longdeptrai", "$2b$12$nNeZrual6HCn2KSu8OroyenyizjXqckFn8UtOl5X.zkSAxFVO6/JS"))
     print(check_password("longdeptraii", "$2b$12$nNeZrual6HCn2KSu8OroyenyizjXqckFn8UtOl5X.zkSAxFVO6/JS"))
+    print(is_valid_name("abcsde%", 100))
+    print(is_valid_name("""a"a""", 3))
+    print(is_valid_name("!asds", 6))
+    print(is_valid_name("long", 100))
+    print(is_valid_name("asdkljafjlaskd", 100))
+    print(is_valid_name("asdkljafjlaskd", 5))
+    print(is_valid_name("1234asdvsxa", 1000))
