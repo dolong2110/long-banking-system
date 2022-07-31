@@ -119,9 +119,9 @@ def authentication() -> Optional[Users]:
     print(" Welcome to Long's Bank\n")
     print("Please choose 1 if you already have an account or 2 if you want to create a new one\n")
     print("  ┌─────────────┐  ╭──────────────────╮                ")
-    print("  │  L O N G    │  │ ▶︎ 1 • Login      │                ")
+    print("  │  L O N G    │  │ ▶︎ 1 • Login   │                ")
     print("  │  T U A N    │  ├──────────────────┴────────────╮   ")
-    print("  │  B A N K    │  │ ▶︎ 2 • Create New Account      │   ")
+    print("  │  B A N K    │  │ ▶︎ 2 • Create New Account   │   ")
     print("  └─────────────┘  ╰───────────────────────────────╯   ")
 
     time.sleep(1)
@@ -230,12 +230,12 @@ def get_gender(gender_list: List[str]) -> str:
     print("Please choose among options below\n")
 
     print("  ┌─────────────┐  ╭────────────────╮       ")
-    print("  │             │  │ ▶︎ 1 • Male     │       ")
+    print("  │             │  │ ▶︎ 1 • Male  │       ")
     print("  │  L O N G    │  ├────────────────┴─╮     ")
-    print("  │  T U A N    │  │ ▶︎ 2 • Female     │     ")
+    print("  │  T U A N    │  │ ▶︎ 2 • Female  │     ")
     print("  │  B A N K    │  ├──────────────────┴╮    ")
-    print("  │             │  │ ▶︎ 3 • Others      │    ")
-    print("  └─────────────┘  ╰────────────────── ╯    ")
+    print("  │             │  │ ▶︎ 3 • Others   │    ")
+    print("  └─────────────┘  ╰───────────────────╯    ")
     
     failed_attempt = consts.FAILED_ATTEMPT
     gender = ""
@@ -256,12 +256,14 @@ def get_gender(gender_list: List[str]) -> str:
     
     if gender == "2":
         return "female"
-    
+
     if gender == "3":
         return "others"
-    
+
     return ""
 
 def get_date_of_birth() -> str:
     print("Please enter the year, month, day when you was born respectively!!!")
     year = utils.get_time()
+
+    return ""
