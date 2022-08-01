@@ -134,8 +134,8 @@ def authentication() -> Optional[Users]:
         failed_attempt = consts.FAILED_ATTEMPT
         hashed_password = user["password"]
         while failed_attempt:
-            password = input("☞ Please enter your password: ")
-            if not utils.check_password(utils.generate_hashed_password(password), hashed_password):
+            password = maskpass.askpass(prompt="☞ Please enter your password: ")
+            if not utils.check_password(password, hashed_password):
                 failed_attempt -= 1
                 print("Wrong password!!! Please try another one")
                 print("You have %d try left!!!" % failed_attempt)
@@ -147,7 +147,7 @@ def authentication() -> Optional[Users]:
             return None
 
         print("Successfully login!!!")
-        print("Welcome back %d!!!" % user["first_name"])
+        print("Welcome back %s!!!" % user["first_name"])
 
     if user_choice == "2":
         print("You want to create new bank account online")
@@ -193,6 +193,10 @@ def authentication() -> Optional[Users]:
         user_information["password"] = password
         user_information["balance"] = "0"
         users.create_new(user_information)
+
+        print("Successfully create new account!!!")
+
+    print("Move to the next step")
 
     return users
 
@@ -335,10 +339,8 @@ def get_password() -> str:
     password = ""
     failed_attempt = consts.FAILED_ATTEMPT
     while failed_attempt:
-
         password = maskpass.askpass(prompt="☞ Please enter your password. It should be at least 8 characters, "
                                    "contain numbers, lowercase, uppercase letters, and special characters: ")
-
         if not utils.is_valid_password(password):
             failed_attempt -= 1
             print("Invalid password. Please, try it again!!!")

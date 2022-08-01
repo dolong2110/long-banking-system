@@ -34,7 +34,7 @@ def check_password(plain_text_password: str, hashed_password: str) -> bool:
     check password with password saved in DB
     """
 
-    return bcrypt.checkpw(str.encode(plain_text_password), str.encode(hashed_password))
+    return bcrypt.checkpw(plain_text_password.encode(), hashed_password.encode())
 
 def is_valid_name(name: str, max_len: int) -> bool:
     if len(name) > max_len or len(name) == 0:
@@ -170,9 +170,9 @@ def is_valid_password(password: str) -> bool:
 
 if __name__ == '__main__':
     # print(greeting())
-    # print(generate_hashed_password("longdeptrai"))
-    # print(check_password("longdeptrai", "$2b$12$nNeZrual6HCn2KSu8OroyenyizjXqckFn8UtOl5X.zkSAxFVO6/JS"))
-    # print(check_password("longdeptraii", "$2b$12$nNeZrual6HCn2KSu8OroyenyizjXqckFn8UtOl5X.zkSAxFVO6/JS"))
+    print(generate_hashed_password("longdeptrai"))
+    print(check_password("longdeptrai", "$2b$12$nNeZrual6HCn2KSu8OroyenyizjXqckFn8UtOl5X.zkSAxFVO6/JS"))
+    print(check_password("longdeptraii", "$2b$12$nNeZrual6HCn2KSu8OroyenyizjXqckFn8UtOl5X.zkSAxFVO6/JS"))
     # print(is_valid_name("abcsde%", 100))
     # print(is_valid_name("""a"a""", 3))
     # print(is_valid_name("!asds", 6))
@@ -185,4 +185,4 @@ if __name__ == '__main__':
     # print(is_valid_phone_number("0123456789"))
     # print(is_valid_phone_number("012345678"))
     # print(is_valid_phone_number("1123456789"))
-    print(is_valid_phone_number("012345678a"))
+    # print(is_valid_phone_number("012345678a"))
