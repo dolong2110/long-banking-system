@@ -50,15 +50,15 @@ def get_temporal(temporal: str, max_time: int) -> str:
     failed_attempt = consts.FAILED_ATTEMPT
     time = ""
     while failed_attempt:
-        time = input("Please enter the %s you was born: " % temporal)
+        time = input("☞ Please enter the %s you was born: " % temporal)
         if not time.isnumeric():
             failed_attempt -= 1
-            print("Invalid type of year, you should enter a valid positive integer number\n")
-            print("You have %d try left!!!\n" % failed_attempt)
+            print("Invalid type of year, you should enter a valid positive integer number")
+            print("You have %d try left!!!" % failed_attempt)
         elif int(time) > max_time:
             failed_attempt -= 1
-            print("Invalid year, you cannot born after %d\n" % max_time)
-            print("You have %d try left!!!\n" % failed_attempt)
+            print("Invalid year, you cannot born after %d" % max_time)
+            print("You have %d try left!!!" % failed_attempt)
         else:
             break
 

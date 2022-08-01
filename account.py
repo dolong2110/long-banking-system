@@ -17,7 +17,7 @@ class Users:
 
     def __init__(self):
         self.raw_data = self._get_data()
-        self.data = models.UsersData(self.make_linked_list())
+        self.data = models.UsersData(self.raw_data)
 
     def _get_data(self):
         """
@@ -41,29 +41,13 @@ class Users:
         json_data = json.dumps(_data)
         file.write(json_data)
 
-    def make_linked_list(self) -> List[str]:
-        """
-        This functions loads the user data and converts it
-        from a dictionary to a list and then appends the
-        account_number as a key from outside into the linked list
-        data object.
-        """
-
-        users_list = []
-        for user_account_number in self.raw_data:
-            user_data = self.raw_data[user_account_number]
-            user_data["account_number"] = user_account_number
-            users_list.append(user_data)
-
-        return users_list
-
     def create_new(self, user_information: defaultdict(str)) -> None:
         """
         Create new user with the given information
         """
 
         new_account_number = self.generate_account_number()
-        while new_account_number in self.data.dict_data:
+        while new_account_number in self.data.users_dict:
             new_account_number = self.generate_account_number()
 
         today_date = datetime.date.today().strftime("%d/%m/%Y")
@@ -133,7 +117,7 @@ def authentication() -> Optional[Users]:
         account_number = ""
         while failed_attempt:
             account_number = input("☞ Please enter your bank account: ")
-            if account_number not in users.data.dict_data:
+            if account_number not in users.data.users_dict:
                 failed_attempt -= 1
                 print("Account does not exist!!! Please enter your own account")
                 print("You have %d try left!!!" % failed_attempt)
@@ -144,7 +128,7 @@ def authentication() -> Optional[Users]:
             print("You enter wrong choice many times, please wait few minutes to login again")
             return None
 
-        user = users.raw_data["account_number"]
+        user = users.raw_data[account_number]
         print(utils.greeting())
         print(" %s" % account_number)
         failed_attempt = consts.FAILED_ATTEMPT

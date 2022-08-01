@@ -1,5 +1,5 @@
 from collections import defaultdict
-from typing import List
+from typing import List, Optional
 
 
 class Node:
@@ -7,12 +7,14 @@ class Node:
     Linked List Node
     """
 
-    def __init__(self, value: str = "", next=None, prev=None):
+    def __init__(self, value: str = "", data: dict={}, next=None, prev=None):
         """
         Creates the node with a value and reference to
         the next and previous node - double linked list
         """
+
         self.value = value
+        self.information = data
         self.next = next
         self.prev = prev
 
@@ -23,37 +25,41 @@ class UsersData:
     all raw_data' information
     """
 
-    def __init__(self, data: List[str]):
+    def __init__(self, data: dict):
         """
         Creates the linked list contains all information
         of raw_data' account
         """
+
         self.head, self.tail = Node(), Node()
-        self.len = 0
-        self.dict_data = defaultdict(Node)
+        self.head.next = self.tail
+        self.tail.prev = self.head
+
+        self.size = 0
+        self.users_dict = defaultdict(Node)
         self._list_to_linked_list(data)
 
-    def _list_to_linked_list(self, arr) -> None:
+    def _list_to_linked_list(self, data: dict) -> None:
         """
         Converts a Python List to a UsersData
         """
 
-        for value in arr:
-            if value not in self.dict_data:
-                self._add(self.tail.prev, value)
+        for account_number in data:
+            if account_number not in self.users_dict:
+                node = Node(account_number, data[account_number])
+                self.users_dict[account_number] = node
+                self._add(node)
 
-    def _add(self, prev_node: Node, value: str) -> None:
+    def _add(self, node: Optional[Node]) -> None:
         """
         Internal method used to add new node
         """
 
-        nxt = prev_node.next
-        add_node = Node(value)
-        prev_node.next, nxt.prev = add_node, add_node
-        add_node.next, add_node.prev = nxt, prev_node
+        prev_node = self.tail.prev
+        prev_node.next, self.tail.next = node, node
+        node.prev, node.next = prev_node, self.tail
 
-        self.dict_data[value] = add_node
-        self.len += 1
+        self.size += 1
 
     def _remove(self, node: Node) -> None:
         """
@@ -63,5 +69,5 @@ class UsersData:
         nxt, prev = node.next, node.prev
         nxt.next, prev.prev = prev, nxt
 
-        self.dict_data.pop(node.value)
-        self.len -= 1
+        self.users_dict.pop(node.value)
+        self.size -= 1
