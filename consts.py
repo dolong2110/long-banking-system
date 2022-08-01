@@ -1,5 +1,5 @@
 BANK_PREFIX = "21101998"
-USERS_DATA_PATH = "data.json"
+USERS_DATA_PATH = "users_data.json"
 FAILED_ATTEMPT = 5
 AUTHENTICATION_CHOICES = {"1", "2"}
 SALT_LEN = 12
@@ -7,8 +7,8 @@ FIRST_NAME_MAX_LEN =256
 MIDDLE_NAME_MAX_LEN = 128
 LAST_NAME_MAX_LEN = 128
 NOT_ALLOW_NAME_CHARACTER = """`1234567890-=~!@#$%^&*()_+[]\;',./{}|:"<>?"""
-GENDER_SET = {"Male", "Female", "Others"}
+GENDER_SET_CHOICE = {"1": "male", "2": "female", "3": "others"}
 PHONE_NUMBER_LEN = 10
 MIN_PASSWORD_LEN = 8
 MAX_PASSWORD_LEN = 100
-SPECIAL_CHARACTERS = ["""(~!@#$%^&*_-+=`|(){}[]:;"'<>,.?/)"""]
+SPECIAL_CHARACTERS = """(~!@#$%^&*_-+=`|(){}[]:;"'<>,.?/)"""
