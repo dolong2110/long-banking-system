@@ -8,3 +8,10 @@ def clean_terminal_screen():
     """
 
     os.system('cls' if os.name == 'nt' else 'clear')
+
+def display_horizontal_line():
+    """
+    A pretty decorative horizontal line.
+    """
+
+    print("───────────────────────────────────────────────────────────────")

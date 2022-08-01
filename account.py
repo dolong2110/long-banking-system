@@ -1,83 +1,16 @@
-import datetime
-import json
-import random
 import time
 from collections import defaultdict
-from os.path import exists
 from typing import List, Optional
 
 import maskpass
 
 import consts
-import models
 import utils
 import interface
 
-class Users:
+import models
 
-    def __init__(self):
-        self.raw_data = self._get_data()
-        self.data = models.UsersData(self.raw_data)
-
-    def _get_data(self):
-        """
-        Reads raw_data' information from the data file
-        """
-        if not exists(consts.USERS_DATA_PATH):
-            return {}
-
-        file = open(consts.USERS_DATA_PATH, "r")
-        users_data = file.read()
-
-        # convert string json to python object
-        return json.loads(users_data)
-
-    def update_data(self, _data) -> None:
-        """
-        Writes the bank information into the data file
-        """
-        
-        file = open(consts.USERS_DATA_PATH, "w")
-        json_data = json.dumps(_data)
-        file.write(json_data)
-
-    def create_new(self, user_information: defaultdict(str)) -> None:
-        """
-        Create new user with the given information
-        """
-
-        new_account_number = self.generate_account_number()
-        while new_account_number in self.data.users_dict:
-            new_account_number = self.generate_account_number()
-
-        today_date = datetime.date.today().strftime("%d/%m/%Y")
-        user_information["account_number"] = new_account_number
-        user_information["issued_date"] = today_date
-        self.raw_data[new_account_number] = user_information
-        
-        self.update_data(self.raw_data)
-
-    @staticmethod
-    def generate_account_number():
-        """
-        Generates a new unique account number
-        It includes first 8 numbers of the bank and 8 random numbers
-        """
-
-        new_number = []
-        for _ in range(8):
-            new_number.append(str(random.randint(0, 9)))
-
-        return ''.join(new_number)
-
-    # def update_information(self):
-    #     """
-    #     this asks the user what to change and then
-    #     changes the properties of that.
-    #
-
-
-def authentication() -> Optional[Users]:
+def authentication() -> (Optional[models.Users], str):
     """
     login or create new banking account
     """
@@ -107,14 +40,14 @@ def authentication() -> Optional[Users]:
 
     if not failed_attempt:
         print("You enter wrong choice many times, please wait few minutes to do it again")
-        return None
+        return None, None
 
-    users = Users()
+    users = models.Users()
+    account_number = ""
 
     if user_choice == "1":
         print("You want to login your account")
         failed_attempt = consts.FAILED_ATTEMPT
-        account_number = ""
         while failed_attempt:
             account_number = input("☞ Please enter your bank account: ")
             if account_number not in users.data.users_dict:
@@ -126,7 +59,7 @@ def authentication() -> Optional[Users]:
 
         if not failed_attempt:
             print("You enter wrong choice many times, please wait few minutes to login again")
-            return None
+            return None, None
 
         user = users.raw_data[account_number]
         print(utils.greeting())
@@ -144,7 +77,7 @@ def authentication() -> Optional[Users]:
 
         if not failed_attempt:
             print("You enter wrong password many times, please wait few minutes to login again")
-            return None
+            return None, None
 
         print("Successfully login!!!")
         print("Welcome back %s!!!" % user["first_name"])
@@ -155,32 +88,32 @@ def authentication() -> Optional[Users]:
 
         first_name = get_name(consts.FIRST_NAME_MAX_LEN, consts.FAILED_ATTEMPT, "first")
         if not first_name:
-            return None
+            return None, None
 
         # Some people may not have middle name
         middle_name = get_name(consts.MIDDLE_NAME_MAX_LEN, consts.FAILED_ATTEMPT, "middle")
 
         last_name = get_name(consts.LAST_NAME_MAX_LEN, consts.FAILED_ATTEMPT, "last")
         if not last_name:
-            return None
+            return None, None
 
         gender = get_gender(consts.GENDER_SET_CHOICE)
         if not gender:
-            return None
+            return None, None
         
         date_of_birth = get_date_of_birth()
         if not date_of_birth:
-            return None
+            return None, None
 
         phone_number = get_phone_number()
         if not phone_number:
-            return None
+            return None, None
 
         email = get_email()
 
         password = get_password()
         if not password:
-            return None
+            return None, None
 
         user_information = defaultdict(str)
         user_information["first_name"] = first_name
@@ -192,13 +125,13 @@ def authentication() -> Optional[Users]:
         user_information["email"] = email
         user_information["password"] = password
         user_information["balance"] = "0"
-        users.create_new(user_information)
+        account_number = users.create_new(user_information)
 
         print("Successfully create new account!!!")
 
     print("Move to the next step")
 
-    return users
+    return users, account_number
 
 def get_name(name_max_len: int, failed_attempt: int, kind: str) -> str:
     name = ""
@@ -219,13 +152,13 @@ def get_name(name_max_len: int, failed_attempt: int, kind: str) -> str:
 
 def get_gender(gender_list: List[str]) -> str:
     print("☞ Please choose among options below")
-    print("  ┌─────────────┐  ╭────────────────╮   ")
-    print("  │             │  │ ▶︎ 1 • Male    │   ")
-    print("  │  L O N G    │  ├────────────────┴─╮   ")
-    print("  │  T U A N    │  │ ▶︎ 2 • Female    │   ")
-    print("  │  B A N K    │  ├──────────────────┴╮   ")
-    print("  │             │  │ ▶︎ 3 • Others     │   ")
-    print("  └─────────────┘  ╰───────────────────╯   ")
+    print("  ┌─────────────┐  ╭──────────────────╮   ")
+    print("  │             │  │ ▶︎ 1 • Male      │   ")
+    print("  │  L O N G    │  ├──────────────────┴─╮   ")
+    print("  │  T U A N    │  │ ▶︎ 2 • Female      │   ")
+    print("  │  B A N K    │  ├────────────────────┴╮   ")
+    print("  │             │  │ ▶︎ 3 • Others       │   ")
+    print("  └─────────────┘  ╰─────────────────────╯   ")
     
     failed_attempt = consts.FAILED_ATTEMPT
     gender = ""
@@ -294,11 +227,11 @@ def get_phone_number() -> str:
 
 def get_email() -> str:
     print("☞ Do you want to add your email? if YES press 1 or 2 if NO")
-    print("  ┌─────────────┐  ╭────────────────╮   ")
-    print("  │  L O N G    │  │ ▶︎ 1 • YES     │   ")
-    print("  │  T U A N    │  ├───────────────┬╯   ")
-    print("  │  B A N K    │  │ ▶︎ 2 • NO     │   ")
-    print("  └─────────────┘  ╰───────────────╯   ")
+    print("  ┌─────────────┐  ╭─────────────────╮   ")
+    print("  │  L O N G    │  │ ▶︎ 1 • YES      │   ")
+    print("  │  T U A N    │  ├────────────────┬╯   ")
+    print("  │  B A N K    │  │ ▶︎ 2 • NO      │   ")
+    print("  └─────────────┘  ╰────────────────╯   ")
 
     failed_attempt = consts.FAILED_ATTEMPT
     user_choice = ""

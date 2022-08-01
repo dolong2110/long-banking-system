@@ -1,5 +1,11 @@
+import datetime
+import json
+import random
 from collections import defaultdict
+from os.path import exists
 from typing import List, Optional
+
+import consts
 
 
 class Node:
@@ -7,7 +13,7 @@ class Node:
     Linked List Node
     """
 
-    def __init__(self, value: str = "", data: dict={}, next=None, prev=None):
+    def __init__(self, value: str = "", data: dict = {}, next = None, prev = None):
         """
         Creates the node with a value and reference to
         the next and previous node - double linked list
@@ -71,3 +77,68 @@ class UsersData:
 
         self.users_dict.pop(node.value)
         self.size -= 1
+
+
+class Users:
+
+    def __init__(self):
+        self.raw_data = self._get_data()
+        self.data = UsersData(self.raw_data)
+
+    def _get_data(self):
+        """
+        Reads raw_data' information from the data file
+        """
+        if not exists(consts.USERS_DATA_PATH):
+            return {}
+
+        file = open(consts.USERS_DATA_PATH, "r")
+        users_data = file.read()
+
+        # convert string json to python object
+        return json.loads(users_data)
+
+    def update_data(self, _data) -> None:
+        """
+        Writes the bank information into the data file
+        """
+
+        file = open(consts.USERS_DATA_PATH, "w")
+        json_data = json.dumps(_data)
+        file.write(json_data)
+
+    def create_new(self, user_information: defaultdict[str]) -> str:
+        """
+        Create new user with the given information
+        """
+
+        new_account_number = self.generate_account_number()
+        while new_account_number in self.data.users_dict:
+            new_account_number = self.generate_account_number()
+
+        today_date = datetime.date.today().strftime("%d/%m/%Y")
+        user_information["account_number"] = new_account_number
+        user_information["issued_date"] = today_date
+        self.raw_data[new_account_number] = user_information
+        self.update_data(self.raw_data)
+
+        return new_account_number
+
+    @staticmethod
+    def generate_account_number():
+        """
+        Generates a new unique account number
+        It includes first 8 numbers of the bank and 8 random numbers
+        """
+
+        new_number = []
+        for _ in range(8):
+            new_number.append(str(random.randint(0, 9)))
+
+        return ''.join(new_number)
+
+    def update_information(self, account_number: str, field: str, change: str):
+        """
+        changes the information of user.
+        """
+
