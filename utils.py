@@ -168,6 +168,16 @@ def is_valid_password(password: str) -> bool:
 
     return have_number and have_lowercase and have_uppercase and have_specical_character
 
+def is_valid_account_number(account_number: str) -> bool:
+    if len(account_number) != consts.ACCOUNT_NUMBER_LEN:
+        return False
+
+    for digit in account_number:
+        if not digit.isnumeric():
+            return False
+
+    return True
+
 if __name__ == '__main__':
     # print(greeting())
     print(generate_hashed_password("longdeptrai"))

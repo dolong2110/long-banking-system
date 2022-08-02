@@ -56,6 +56,13 @@ class UsersData:
                 self.users_dict[account_number] = node
                 self._add(node)
 
+    def update(self, account_number: str, data: defaultdict[str]):
+        node = self.users_dict[account_number]
+        node.information = data
+
+    def delete(self, account_number: str):
+        self._remove(self.users_dict[account_number])
+
     def _add(self, node: Optional[Node]) -> None:
         """
         Internal method used to add new node
@@ -77,6 +84,7 @@ class UsersData:
 
         self.users_dict.pop(node.value)
         self.size -= 1
+
 
 
 class Users:
@@ -124,6 +132,12 @@ class Users:
 
         return new_account_number
 
+    def delete_user(self, account_number):
+        self.raw_data.pop(account_number)
+        self.update_data(self.raw_data)
+        self.data.delete(account_number)
+
+
     @staticmethod
     def generate_account_number():
         """
@@ -132,7 +146,7 @@ class Users:
         """
 
         new_number = []
-        for _ in range(8):
+        for _ in range(consts.ACCOUNT_NUMBER_LEN):
             new_number.append(str(random.randint(0, 9)))
 
         return ''.join(new_number)
@@ -142,3 +156,6 @@ class Users:
         changes the information of user.
         """
 
+        self.raw_data[account_number][field] = change
+        self.update_data(self.raw_data)
+        self.data.update(account_number, self.raw_data[account_number])

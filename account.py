@@ -21,11 +21,14 @@ def authentication() -> (Optional[models.Users], str):
     print(utils.greeting())
     print(" Welcome to Long's Bank\n")
     print("Please choose 1 if you already have an account or 2 if you want to create a new one")
-    print("  ┌─────────────┐  ╭──────────────────╮   ")
-    print("  │  L O N G    │  │ ▶︎ 1 • Login     │   ")
-    print("  │  T U A N    │  ├──────────────────┴────────────╮   ")
-    print("  │  B A N K    │  │ ▶︎ 2 • Create New Account     │   ")
-    print("  └─────────────┘  ╰───────────────────────────────╯   ")
+    print("  ┌─────────────┐  ╭──────────────────╮                  ")
+    print("  │             │  │ ▶︎ 1 • Login     │                ")
+    print("  │  L O N G    │  ├──────────────────┴────────────╮     ")
+    print("  │  T U A N    │  │ ▶︎ 2 • Create New Account     │   ")
+    print("  │  B A N K    │  ├──────────────────┬────────────╯     ")
+    print("  │             │  │ ▶︎ 3 • Exit      │                ")
+    print("  └─────────────┘  ╰──────────────────╯                  ")
+
 
     failed_attempt = consts.FAILED_ATTEMPT
     user_choice = ""
@@ -33,14 +36,14 @@ def authentication() -> (Optional[models.Users], str):
         user_choice = input("☞ Enter your choice: ")
         if user_choice not in consts.AUTHENTICATION_CHOICES:
             failed_attempt -= 1
-            print("Wrong choice!!! Please choose only 1 or 2")
+            print("Wrong choice!!! Please choose only 1 to 3")
             print("You have %d try left!!!" % failed_attempt)
         else:
             break
 
     if not failed_attempt:
         print("You enter wrong choice many times, please wait few minutes to do it again")
-        return None, None
+        return None, ""
 
     users = models.Users()
     account_number = ""
@@ -59,7 +62,7 @@ def authentication() -> (Optional[models.Users], str):
 
         if not failed_attempt:
             print("You enter wrong choice many times, please wait few minutes to login again")
-            return None, None
+            return None, ""
 
         user = users.raw_data[account_number]
         print(utils.greeting())
@@ -77,7 +80,7 @@ def authentication() -> (Optional[models.Users], str):
 
         if not failed_attempt:
             print("You enter wrong password many times, please wait few minutes to login again")
-            return None, None
+            return None, ""
 
         print("Successfully login!!!")
         print("Welcome back %s!!!" % user["first_name"])
@@ -88,32 +91,32 @@ def authentication() -> (Optional[models.Users], str):
 
         first_name = get_name(consts.FIRST_NAME_MAX_LEN, consts.FAILED_ATTEMPT, "first")
         if not first_name:
-            return None, None
+            return None, ""
 
         # Some people may not have middle name
         middle_name = get_name(consts.MIDDLE_NAME_MAX_LEN, consts.FAILED_ATTEMPT, "middle")
 
         last_name = get_name(consts.LAST_NAME_MAX_LEN, consts.FAILED_ATTEMPT, "last")
         if not last_name:
-            return None, None
+            return None, ""
 
         gender = get_gender(consts.GENDER_SET_CHOICE)
         if not gender:
-            return None, None
+            return None, ""
         
         date_of_birth = get_date_of_birth()
         if not date_of_birth:
-            return None, None
+            return None, ""
 
         phone_number = get_phone_number()
         if not phone_number:
-            return None, None
+            return None, ""
 
         email = get_email()
 
-        password = get_password()
+        password = get_password("")
         if not password:
-            return None, None
+            return None, ""
 
         user_information = defaultdict(str)
         user_information["first_name"] = first_name
@@ -128,6 +131,9 @@ def authentication() -> (Optional[models.Users], str):
         account_number = users.create_new(user_information)
 
         print("Successfully create new account!!!")
+
+    if user_choice == "3":
+        return None, ""
 
     print("Move to the next step")
 
@@ -268,7 +274,7 @@ def get_email() -> str:
 
     return email
 
-def get_password() -> str:
+def get_password(previous_password: str) -> str:
     password = ""
     failed_attempt = consts.FAILED_ATTEMPT
     while failed_attempt:
@@ -277,6 +283,10 @@ def get_password() -> str:
         if not utils.is_valid_password(password):
             failed_attempt -= 1
             print("Invalid password. Please, try it again!!!")
+            print("You have %d try left!!!" % failed_attempt)
+        elif utils.check_password(password, previous_password):
+            failed_attempt -= 1
+            print("You enter same password with your previous password")
             print("You have %d try left!!!" % failed_attempt)
         else:
             break
@@ -302,4 +312,4 @@ def get_password() -> str:
     return utils.generate_hashed_password(password)
 
 if __name__ == '__main__':
-    print(get_password())
+    print(get_password("$2b$12$t1jfSN1x4hMdxQFGiCAm0.AYsNz6Sviw5nLMzcm0rJQkQMIlIBx86"))
