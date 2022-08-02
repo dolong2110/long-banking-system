@@ -209,7 +209,8 @@ def get_date_of_birth() -> str:
     if not day:
         return ""
 
-    if not utils.is_valid_day([int(day), int(month), int(year)], [int(current_day), int(current_month), int(current_year)]):
+    if not utils.is_valid_day([int(day), int(month), int(year)],
+                              [int(current_day), int(current_month), int(current_year)]):
         return ""
 
     return day + "/" + month + "/" + year
@@ -239,19 +240,8 @@ def get_email() -> str:
     print("  │  B A N K    │  │ ▶︎ 2 • NO      │   ")
     print("  └─────────────┘  ╰────────────────╯   ")
 
-    failed_attempt = consts.FAILED_ATTEMPT
-    user_choice = ""
-    while failed_attempt:
-        user_choice = input("☞ Enter your choice: ")
-        if user_choice not in {"1", "2"}:
-            failed_attempt -= 1
-            print("Wrong choice!!! Please choose only 1 or 2")
-            print("You have %d try left!!!" % failed_attempt)
-        else:
-            break
-
-    if not failed_attempt:
-        print("You enter wrong choice many times, please wait few minutes to do it again")
+    user_choice = utils.get_yes_no_choice()
+    if not user_choice:
         return ""
 
     if user_choice == "2":

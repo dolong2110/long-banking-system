@@ -178,6 +178,49 @@ def is_valid_account_number(account_number: str) -> bool:
 
     return True
 
+def get_yes_no_choice() -> str:
+    print("  ┌─────────────┐  ╭─────────────────╮     ")
+    print("  │  L O N G    │  │ ▶︎ 1 • YES      │  ")
+    print("  │  T U A N    │  ├────────────────┬╯     ")
+    print("  │  B A N K    │  │ ▶︎ 2 • NO      │   ")
+    print("  └─────────────┘  ╰────────────────╯      ")
+
+    failed_attempt = consts.FAILED_ATTEMPT
+    user_choice = ""
+    while failed_attempt:
+        user_choice = input("☞ Enter your choice: ")
+        if user_choice not in consts.YES_NO_CHOICES:
+            failed_attempt -= 1
+            print("Wrong choice!!! Please choose only 1 or 2")
+            print("You have %d try left!!!" % failed_attempt)
+        else:
+            break
+
+    if not failed_attempt:
+        print("You enter wrong choice many times, please wait few minutes to do it again")
+        return ""
+
+    return user_choice
+
+def is_valid_balance(balance: str) -> bool:
+    for digit in balance:
+        if not digit.isnumeric() and digit != ".":
+            return False
+
+    return True
+
+def is_valid_message(message: str) -> bool:
+    if len(message) > consts.MESSAGE_MAX_CHARACTERS:
+        print(f"Your message have more than {consts.MESSAGE_MAX_CHARACTERS} characters")
+        return False
+
+    words = message.split(" ")
+    if len(words) > consts.MESSAGE_MAX_WORDS:
+        print(f"Your message have more than {consts.MESSAGE_MAX_WORDS} characters")
+        return False
+
+    return True
+
 if __name__ == '__main__':
     # print(greeting())
     print(generate_hashed_password("longdeptrai"))

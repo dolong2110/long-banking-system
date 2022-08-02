@@ -1,4 +1,5 @@
 import account
+import messages
 import services
 
 if __name__ == '__main__':
@@ -6,6 +7,8 @@ if __name__ == '__main__':
     if not users_data or not account_number:
         print("Good bye!!! See you again!!!")
 
-    while users_data:
-        users_data = services.user_service(users_data, account_number)
+    feedbacks = messages.MessageQueue()
+
+    while users_data and feedbacks:
+        users_data, feedbacks = services.user_service(users_data, account_number, feedbacks)
     print("Thank you so much for using Long bank's app, see you soon!!!")
