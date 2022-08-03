@@ -1,6 +1,6 @@
 from typing import Optional
 
-import consts
+from consts import *
 import models
 import utils
 
@@ -79,7 +79,7 @@ def deposit_money(users, account_number: str) -> models.Users:
         print("Finish action!!!")
         return users
 
-    users.update_information(account_number, "balance", str(expect_balance), consts.USERS_DATA_PATH)
+    users.update_information(account_number, "balance", str(expect_balance), ACCOUNT_CONFIGS["users"][FILE_NAME])
     print("Successfully deposit the money!!!")
     print(f"Your balance now is: {expect_balance}")
 
