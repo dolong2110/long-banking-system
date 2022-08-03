@@ -231,7 +231,6 @@ if __name__ == '__main__':
     # print(generate_hashed_password("longdeptrai"))
     # print(check_password("longdeptrai", "$2b$12$nNeZrual6HCn2KSu8OroyenyizjXqckFn8UtOl5X.zkSAxFVO6/JS"))
     # # print(check_password("longdeptraii", "$2b$12$nNeZrual6HCn2KSu8OroyenyizjXqckFn8UtOl5X.zkSAxFVO6/JS"))
-    # print(is_valid_name("abcsde%", 100))
     # print(is_valid_name("""a"a""", 3))
     # print(is_valid_name("!asds", 6))
     # print(is_valid_name("long", 100))
