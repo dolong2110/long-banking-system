@@ -227,7 +227,7 @@ def proceed_next() -> None:
     _ = input("Press anything if you want to finish this session")
 
 if __name__ == '__main__':
-    # print(greeting())
+    print(greeting())
     # print(generate_hashed_password("longdeptrai"))
     # print(check_password("longdeptrai", "$2b$12$nNeZrual6HCn2KSu8OroyenyizjXqckFn8UtOl5X.zkSAxFVO6/JS"))
     # # print(check_password("longdeptraii", "$2b$12$nNeZrual6HCn2KSu8OroyenyizjXqckFn8UtOl5X.zkSAxFVO6/JS"))
@@ -244,3 +244,4 @@ if __name__ == '__main__':
     # print(is_valid_phone_number("012345678"))
     # print(is_valid_phone_number("1123456789"))
     # print(is_valid_phone_number("012345678a"))
+
