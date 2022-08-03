@@ -46,8 +46,14 @@ py -m venv bank-system-env
 pip install -r requirements.txt
 ```
 
-- Run
+- Run as an user
 
 ```
 py main.py
+```
+
+- Run as an admin
+
+```
+py admin.py
 ```
