@@ -1,4 +1,6 @@
 import datetime
+import string
+
 import bcrypt
 from typing import List
 
@@ -42,7 +44,7 @@ def is_valid_name(name: str, max_len: int) -> bool:
 
     set_character = set(name)
     for character in set_character:
-        if character in consts.NOT_ALLOW_NAME_CHARACTER:
+        if character in string.punctuation or character.isnumeric():
             return False
     return True
 
@@ -163,7 +165,7 @@ def is_valid_password(password: str) -> bool:
             have_lowercase = True
         elif char.isupper():
             have_uppercase = True
-        elif char in consts.SPECIAL_CHARACTERS:
+        elif char in string.punctuation:
             have_specical_character = True
 
     return have_number and have_lowercase and have_uppercase and have_specical_character
@@ -226,9 +228,9 @@ def proceed_next() -> None:
 
 if __name__ == '__main__':
     # print(greeting())
-    print(generate_hashed_password("longdeptrai"))
-    print(check_password("longdeptrai", "$2b$12$nNeZrual6HCn2KSu8OroyenyizjXqckFn8UtOl5X.zkSAxFVO6/JS"))
-    print(check_password("longdeptraii", "$2b$12$nNeZrual6HCn2KSu8OroyenyizjXqckFn8UtOl5X.zkSAxFVO6/JS"))
+    # print(generate_hashed_password("longdeptrai"))
+    # print(check_password("longdeptrai", "$2b$12$nNeZrual6HCn2KSu8OroyenyizjXqckFn8UtOl5X.zkSAxFVO6/JS"))
+    # # print(check_password("longdeptraii", "$2b$12$nNeZrual6HCn2KSu8OroyenyizjXqckFn8UtOl5X.zkSAxFVO6/JS"))
     # print(is_valid_name("abcsde%", 100))
     # print(is_valid_name("""a"a""", 3))
     # print(is_valid_name("!asds", 6))
