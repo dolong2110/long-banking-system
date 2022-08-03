@@ -221,6 +221,9 @@ def is_valid_message(message: str) -> bool:
 
     return True
 
+def proceed_next() -> None:
+    _ = input("Press anything if you want to finish this session")
+
 if __name__ == '__main__':
     # print(greeting())
     print(generate_hashed_password("longdeptrai"))

@@ -6,6 +6,7 @@ import interface
 import messages
 import models
 import transactions
+import utils
 
 
 def user_service(users: models.Users, account_number: str, feedbacks_messages: messages.MessageQueue) -> \
@@ -43,7 +44,7 @@ def user_service(users: models.Users, account_number: str, feedbacks_messages: m
 
     if not failed_attempt:
         print("You enter wrong choice many times, please wait few minutes to do it again")
-        return None, None
+        return None, feedbacks_messages
 
     if user_choice == "1":
         _display_user_information(users.raw_data[account_number])
@@ -56,7 +57,7 @@ def user_service(users: models.Users, account_number: str, feedbacks_messages: m
 
     if user_choice == "4":
         users.delete_user(account_number)
-        return None, None
+        return None, feedbacks_messages
 
     if user_choice == "5":
         users = transactions.transaction_services(users, account_number)
@@ -65,7 +66,7 @@ def user_service(users: models.Users, account_number: str, feedbacks_messages: m
         feedbacks_messages = messages.add_message(feedbacks_messages, account_number)
 
     if user_choice == "7":
-        return None, None
+        return None, feedbacks_messages
 
     return users, feedbacks_messages
 
@@ -75,6 +76,7 @@ def _display_user_information(user: dict) -> None:
     """
 
     interface.display_horizontal_line()
+
     print("Here is your information. You are welcome!!!")
     print("Full name: %s %s %s" % (user["last_name"], user["middle_name"], user["first_name"]))
     print("Gender: %s" % user["gender"])
@@ -83,6 +85,10 @@ def _display_user_information(user: dict) -> None:
     print("Email: %s" % user["email"])
     print("Account number: %s" % user["account_number"])
     print("Issued date: %s" % user["issued_date"])
+
+    interface.display_horizontal_line()
+    utils.proceed_next()
+
 
 def _update_information(users: models.Users, account_number: str) -> models.Users:
     print("What information you want to edit?")
@@ -174,6 +180,9 @@ def _update_information(users: models.Users, account_number: str) -> models.User
         users.update_information(account_number, "email", email)
         print("Successfully update your email!!!")
 
+    print("Please check your new information")
+    _display_user_information(users.raw_data[account_number])
+
     return users
 
 def _update_password(users: models.Users, account_number: str) -> models.Users:
@@ -182,5 +191,6 @@ def _update_password(users: models.Users, account_number: str) -> models.Users:
         return users
 
     users.update_information(account_number, "password", new_password)
+    print("Successfully update new password")
 
     return users

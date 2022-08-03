@@ -234,11 +234,6 @@ def get_phone_number() -> str:
 
 def get_email() -> str:
     print("☞ Do you want to add your email? if YES press 1 or 2 if NO")
-    print("  ┌─────────────┐  ╭─────────────────╮   ")
-    print("  │  L O N G    │  │ ▶︎ 1 • YES      │   ")
-    print("  │  T U A N    │  ├────────────────┬╯   ")
-    print("  │  B A N K    │  │ ▶︎ 2 • NO      │   ")
-    print("  └─────────────┘  ╰────────────────╯   ")
 
     user_choice = utils.get_yes_no_choice()
     if not user_choice:

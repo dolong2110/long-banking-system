@@ -25,8 +25,6 @@ class MessageQueue:
         self.head.next, self.tail.prev = self.tail, self.head
         self.size = 0
 
-        self.make_queue()
-
     def _get_data(self):
         """
         Reads raw_data' information from the data file
@@ -76,9 +74,9 @@ class MessageQueue:
         self._remove(self.head.next)
 
     def update(self) -> None:
-        data_list = []
+        data_list = [data for data in self._get_data()]
         cur = self.head.next
-        while cur.key != -1:
+        while cur != self.tail:
             data_list.append(cur.data)
             cur = cur.next
 
@@ -94,6 +92,7 @@ class MessageQueue:
         prev, nxt = node.prev, node.next
         prev.next, nxt.prev = nxt, prev
         self.size -= 1
+
 
 
 def add_message(messages: MessageQueue, account_number: str) -> MessageQueue:
