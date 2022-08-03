@@ -1,10 +1,8 @@
 from datetime import datetime
-import json
 from collections import defaultdict
-from os.path import exists
 from typing import Optional
 
-import consts
+from consts import *
 import utils
 
 
@@ -25,30 +23,8 @@ class MessageQueue:
         self.head.next, self.tail.prev = self.tail, self.head
         self.size = 0
 
-    def _get_data(self):
-        """
-        Reads raw_data' information from the data file
-        """
-        if not exists(consts.MESSAGES_DATA_PATH):
-            return {}
-
-        file = open(consts.MESSAGES_DATA_PATH, "r")
-        messages_data = file.read()
-
-        # convert string json to python object
-        return json.loads(messages_data)
-
-    def _update_data(self, _data) -> None:
-        """
-        Writes the bank information into the data file
-        """
-
-        file = open(consts.MESSAGES_DATA_PATH, "w")
-        json_data = json.dumps(_data)
-        file.write(json_data)
-
     def make_queue(self):
-        for data in self._get_data():
+        for data in utils.get_data_from_json(MESSAGES_DATA_PATH):
             node = Node(data)
             self._add(node)
 
@@ -74,13 +50,13 @@ class MessageQueue:
         self._remove(self.head.next)
 
     def update(self) -> None:
-        data_list = [data for data in self._get_data()]
+        data_list = [data for data in utils.get_data_from_json(MESSAGES_DATA_PATH)]
         cur = self.head.next
         while cur != self.tail:
             data_list.append(cur.data)
             cur = cur.next
 
-        self._update_data(data_list)
+        utils.write_data_to_json(data_list, MESSAGES_DATA_PATH)
 
     def _add(self, node: Node) -> None:
         prev_node = self.tail.prev
@@ -98,9 +74,9 @@ class MessageQueue:
 def add_message(messages: MessageQueue, account_number: str) -> MessageQueue:
     print("We are very appreciated to hear from your thinking, your satisfied, dis-satisfied, "
           "and the idea to help us improve!!!")
-    print(f"Your message should be less than {consts.MESSAGE_MAX_CHARACTERS} characters and"
-          f"less than {consts.MESSAGE_MAX_WORDS} words")
-    failed_attempt = consts.FAILED_ATTEMPT
+    print(f"Your message should be less than {MESSAGE_MAX_CHARACTERS} characters and"
+          f"less than {MESSAGE_MAX_WORDS} words")
+    failed_attempt = FAILED_ATTEMPT
     message = ""
     while failed_attempt:
         message = input("Please give a message here: ")
@@ -118,11 +94,30 @@ def add_message(messages: MessageQueue, account_number: str) -> MessageQueue:
     time_now = datetime.now()
     timestamp = datetime.timestamp(time_now)
     message_data = defaultdict(str)
-    message_data["account_number"] = account_number
-    message_data["message"] = message
-    message_data["timestamp"] = str(timestamp)
-    message_data["time"] = str(time_now)
+    message_data[ACCOUNT_NUMBER] = account_number
+    message_data[MESSAGE] = message
+    message_data[TIMESTAMP] = str(timestamp)
+    message_data[TIME] = str(time_now)
 
     messages.enqueue(message_data)
+
+    return messages
+
+def read_message(messages: MessageQueue) -> Optional[MessageQueue]:
+    print("Let's see the users' feedback to improve our application")
+    if not messages.size:
+        print("There are no messages to read")
+        return None
+
+    message_data = messages.get_front().data
+    messages.dequeue()
+    print(f"Messages from user: {message_data[ACCOUNT_NUMBER]}")
+    utils.proceed_next()
+    print(f"Time message sent: {message_data[TIME]}")
+    utils.proceed_next()
+    print(f"Message: {message_data[MESSAGE]}")
+    utils.proceed_next()
+    print(message_data)
+    utils.proceed_next()
 
     return messages

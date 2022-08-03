@@ -1,10 +1,12 @@
 import datetime
+import json
 import string
+from os.path import exists
 
 import bcrypt
 from typing import List
 
-import consts
+from consts import *
 
 
 def greeting() -> str:
@@ -170,8 +172,8 @@ def is_valid_password(password: str) -> bool:
 
     return have_number and have_lowercase and have_uppercase and have_specical_character
 
-def is_valid_account_number(account_number: str) -> bool:
-    if len(account_number) != consts.ACCOUNT_NUMBER_LEN:
+def is_valid_account_number(account_number: str, privilege: str) -> bool:
+    if len(account_number) != ACCOUNT_CONFIGS[privilege][ACCOUNT_NUMBER_LEN]:
         return False
 
     for digit in account_number:
@@ -187,11 +189,11 @@ def get_yes_no_choice() -> str:
     print("  │  B A N K    │  │ ▶︎ 2 • NO      │   ")
     print("  └─────────────┘  ╰────────────────╯      ")
 
-    failed_attempt = consts.FAILED_ATTEMPT
+    failed_attempt = FAILED_ATTEMPT
     user_choice = ""
     while failed_attempt:
         user_choice = input("☞ Enter your choice: ")
-        if user_choice not in consts.YES_NO_CHOICES:
+        if user_choice not in YES_NO_CHOICES:
             failed_attempt -= 1
             print("Wrong choice!!! Please choose only 1 or 2")
             print("You have %d try left!!!" % failed_attempt)
@@ -224,7 +226,31 @@ def is_valid_message(message: str) -> bool:
     return True
 
 def proceed_next() -> None:
-    _ = input("Press anything if you want to finish this session")
+    _ = input("Press anything if you want to proceed to the session")
+
+def get_data_from_json(filename: str):
+    """
+    Reads information from the data file
+    """
+
+    if not exists(filename):
+        return {}
+
+    file = open(filename, "r")
+    data = file.read()
+
+    # convert string json to python object
+    return json.loads(data)
+
+def write_data_to_json(data, filename: str) -> None:
+    """
+    Writes the data into the file with filename
+    """
+
+    file = open(filename, "w")
+    json_data = json.dumps(data)
+    file.write(json_data)
+
 
 if __name__ == '__main__':
     print(greeting())

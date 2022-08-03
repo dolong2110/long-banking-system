@@ -20,6 +20,7 @@ class Test(TestCase):
     def test_is_valid_name(self):
         self.countTestCases()
         self.assertTrue(is_valid_name("long", 4))
+        self.assertTrue(is_valid_name("도주용", 4))
         self.assertFalse(is_valid_name("long", 3))  # exceed length
         self.assertFalse(is_valid_name("long%", 6))  # contain special character
         self.assertFalse(is_valid_name("long#", 6))  # contain special character

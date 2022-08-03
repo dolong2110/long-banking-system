@@ -4,19 +4,18 @@ from typing import List, Optional
 
 import maskpass
 
-import consts
+from consts import *
 import utils
 import interface
 
 import models
 
-def authentication() -> (Optional[models.Users], str):
+def authentication(privilege: str) -> (Optional[models.Users], str):
     """
     login or create new banking account
     """
 
     interface.clean_terminal_screen()
-    print()
 
     print(utils.greeting())
     print(" Welcome to Long's Bank\n")
@@ -45,12 +44,12 @@ def authentication() -> (Optional[models.Users], str):
         print("You enter wrong choice many times, please wait few minutes to do it again")
         return None, ""
 
-    users = models.Users()
+    users = models.Users(privilege)
     account_number = ""
 
     if user_choice == "1":
         print("You want to login your account")
-        failed_attempt = consts.FAILED_ATTEMPT
+        failed_attempt = FAILED_ATTEMPT
         while failed_attempt:
             account_number = input("☞ Please enter your bank account: ")
             if account_number not in users.data.users_dict:
@@ -67,7 +66,7 @@ def authentication() -> (Optional[models.Users], str):
         user = users.raw_data[account_number]
         print(utils.greeting())
         print(" %s" % account_number)
-        failed_attempt = consts.FAILED_ATTEMPT
+        failed_attempt = FAILED_ATTEMPT
         hashed_password = user["password"]
         while failed_attempt:
             password = maskpass.askpass(prompt="☞ Please enter your password: ")
@@ -83,24 +82,25 @@ def authentication() -> (Optional[models.Users], str):
             return None, ""
 
         print("Successfully login!!!")
-        print("Welcome back %s!!!" % user["first_name"])
+        print("Welcome back %s!!!" % user[FIRST_NAME])
 
     if user_choice == "2":
         print("You want to create new bank account online")
         print("Please enter required information correctly, make sure all information you provide are true")
 
-        first_name = get_name(consts.FIRST_NAME_MAX_LEN, consts.FAILED_ATTEMPT, "first")
+        first_name = get_name(FIRST_NAME_MAX_LEN, FAILED_ATTEMPT, "first")
         if not first_name:
             return None, ""
 
         # Some people may not have middle name
-        middle_name = get_name(consts.MIDDLE_NAME_MAX_LEN, consts.FAILED_ATTEMPT, "middle")
+        middle_name = ""
+        middle_name = get_name(MIDDLE_NAME_MAX_LEN, FAILED_ATTEMPT, "middle")
 
-        last_name = get_name(consts.LAST_NAME_MAX_LEN, consts.FAILED_ATTEMPT, "last")
+        last_name = get_name(LAST_NAME_MAX_LEN, FAILED_ATTEMPT, "last")
         if not last_name:
             return None, ""
 
-        gender = get_gender(consts.GENDER_SET_CHOICE)
+        gender = get_gender(GENDER_SET_CHOICE)
         if not gender:
             return None, ""
         
@@ -119,15 +119,15 @@ def authentication() -> (Optional[models.Users], str):
             return None, ""
 
         user_information = defaultdict(str)
-        user_information["first_name"] = first_name
-        user_information["middle_name"] = middle_name
-        user_information["last_name"] = last_name
-        user_information["gender"] = gender
-        user_information["date_of_birth"] = date_of_birth
-        user_information["phone_number"] = phone_number
-        user_information["email"] = email
-        user_information["password"] = password
-        user_information["balance"] = "0"
+        user_information[FIRST_NAME] = first_name
+        user_information[MIDDLE_NAME] = middle_name
+        user_information[LAST_NAME] = last_name
+        user_information[GENDER] = gender
+        user_information[DATE_OF_BIRTH] = date_of_birth
+        user_information[PHONE_NUMBER] = phone_number
+        user_information[EMAIL] = email
+        user_information[PASSWORD] = password
+        user_information[BALANCE] = "0"
         account_number = users.create_new(user_information)
 
         print("Successfully create new account!!!")
@@ -216,7 +216,7 @@ def get_date_of_birth() -> str:
     return day + "/" + month + "/" + year
 
 def get_phone_number() -> str:
-    failed_attempt = consts.FAILED_ATTEMPT
+    failed_attempt = FAILED_ATTEMPT
     phone_number = ""
     while failed_attempt:
         phone_number = input("☞ Please enter your phone number: ")
@@ -264,7 +264,7 @@ def get_password(previous_password: str) -> str:
     failed_attempt = consts.FAILED_ATTEMPT
     while failed_attempt:
         password = maskpass.askpass(prompt="☞ Please enter your password. It should be at least 8 characters, "
-                                   "contain numbers, lowercase, uppercase letters, and special characters: ")
+                                    "contain numbers, lowercase, uppercase letters, and special characters: ")
         if not utils.is_valid_password(password):
             failed_attempt -= 1
             print("Invalid password. Please, try it again!!!")
@@ -280,7 +280,7 @@ def get_password(previous_password: str) -> str:
         print("You enter invalid choice many times, please wait a few minutes to try it again!!!")
         password = ""
 
-    failed_attempt = consts.FAILED_ATTEMPT
+    failed_attempt = FAILED_ATTEMPT
     while failed_attempt:
         re_enter_password = maskpass.askpass(prompt="☞ Please re-enter your password: ")
         if password != re_enter_password:
@@ -296,5 +296,3 @@ def get_password(previous_password: str) -> str:
 
     return utils.generate_hashed_password(password)
 
-if __name__ == '__main__':
-    print(get_password("$2b$12$t1jfSN1x4hMdxQFGiCAm0.AYsNz6Sviw5nLMzcm0rJQkQMIlIBx86"))

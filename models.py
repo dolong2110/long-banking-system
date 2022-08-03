@@ -1,11 +1,10 @@
 import datetime
-import json
 import random
 from collections import defaultdict
-from os.path import exists
-from typing import List, Optional
+from typing import Optional
 
-import consts
+from consts import *
+import utils
 
 
 class Node:
@@ -86,67 +85,47 @@ class UsersData:
         self.size -= 1
 
 
-
 class Users:
 
-    def __init__(self):
-        self.raw_data = self._get_data()
+    def __init__(self, privilege: str = "users"):
+
+        self.privilege = privilege
+        self.configs = ACCOUNT_CONFIGS[privilege]
+        self.raw_data = utils.get_data_from_json(self.configs[FILE_NAME])
         self.data = UsersData(self.raw_data)
-
-    def _get_data(self):
-        """
-        Reads raw_data' information from the data file
-        """
-        if not exists(consts.USERS_DATA_PATH):
-            return {}
-
-        file = open(consts.USERS_DATA_PATH, "r")
-        users_data = file.read()
-
-        # convert string json to python object
-        return json.loads(users_data)
-
-    def update_data(self, _data) -> None:
-        """
-        Writes the bank information into the data file
-        """
-
-        file = open(consts.USERS_DATA_PATH, "w")
-        json_data = json.dumps(_data)
-        file.write(json_data)
 
     def create_new(self, user_information: defaultdict[str]) -> str:
         """
         Create new user with the given information
         """
 
-        new_account_number = self.generate_account_number()
+        new_account_number = self.generate_account_number(self.configs[ACCOUNT_NUMBER_LEN])
         while new_account_number in self.data.users_dict:
-            new_account_number = self.generate_account_number()
+            new_account_number = self.generate_account_number(self.configs[ACCOUNT_NUMBER_LEN])
 
         today_date = datetime.date.today().strftime("%d/%m/%Y")
-        user_information["account_number"] = new_account_number
-        user_information["issued_date"] = today_date
+        user_information[ACCOUNT_NUMBER] = new_account_number
+        user_information[ISSUED_DATE] = today_date
         self.raw_data[new_account_number] = user_information
-        self.update_data(self.raw_data)
+        utils.write_data_to_json(self.raw_data, self.configs[FILE_NAME])
 
         return new_account_number
 
-    def delete_user(self, account_number):
+    def delete_user(self, account_number) -> None:
         self.raw_data.pop(account_number)
-        self.update_data(self.raw_data)
+        utils.write_data_to_json(self.raw_data, self.configs[FILE_NAME])
         self.data.delete(account_number)
 
 
     @staticmethod
-    def generate_account_number():
+    def generate_account_number(account_len: int):
         """
         Generates a new unique account number
         It includes first 8 numbers of the bank and 8 random numbers
         """
 
         new_number = []
-        for _ in range(consts.ACCOUNT_NUMBER_LEN):
+        for _ in range(account_len):
             new_number.append(str(random.randint(0, 9)))
 
         return ''.join(new_number)
@@ -157,5 +136,5 @@ class Users:
         """
 
         self.raw_data[account_number][field] = change
-        self.update_data(self.raw_data)
+        utils.write_data_to_json(self.raw_data, self.configs[FILE_NAME])
         self.data.update(account_number, self.raw_data[account_number])
