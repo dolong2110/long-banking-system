@@ -85,7 +85,7 @@ def deposit_money(users, account_number: str) -> models.Users:
 
     return users
 
-def withdraw_money(users: models.Users, account_number: str) -> users:
+def withdraw_money(users: models.Users, account_number: str) -> models.Users:
     user = users.raw_data[account_number]
     current_balance = user["balance"]
     withdraw = _get_money(current_balance)
