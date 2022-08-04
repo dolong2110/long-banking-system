@@ -9,7 +9,7 @@ import transactions
 import utils
 
 
-def users_services(users: models.Users, account_number: str, feedbacks_messages: messages.MessageQueue) -> \
+def users_services(users: models.Users, user_index: int, feedbacks_messages: messages.MessageQueue) -> \
         (Optional[models.Users], Optional[messages.MessageQueue]):
     interface.clean_terminal_screen()
 
@@ -47,30 +47,31 @@ def users_services(users: models.Users, account_number: str, feedbacks_messages:
         return None, feedbacks_messages
 
     if user_choice == "1":
-        _display_user_information(users.raw_data[account_number])
+        _display_user_information(users.data[user_index])
 
     if user_choice == "2":
-        users = _update_information(users, account_number)
+        users = _update_information(users, user_index)
 
     if user_choice == "3":
-        users = _update_password(users, account_number)
+        users = _update_password(users, user_index)
 
     if user_choice == "4":
-        users.delete_user(account_number)
+        users.delete_user(user_index)
         return None, feedbacks_messages
 
     if user_choice == "5":
-        users = transactions.transaction_services(users, account_number)
+        users = transactions.transaction_services(users, user_index)
 
     if user_choice == "6":
-        feedbacks_messages = messages.add_message(feedbacks_messages, account_number)
+        feedbacks_messages = messages.add_message(feedbacks_messages, users.data[user_index][ACCOUNT_NUMBER])
 
     if user_choice == "7":
         return None, feedbacks_messages
 
     return users, feedbacks_messages
 
-def admins_services(admins: models.Users, users: models.Users, account_number, feedbacks_messages: messages.MessageQueue) -> \
+def admins_services(admins: models.Users, users: models.Users, user_index: int,
+                    feedbacks_messages: messages.MessageQueue) -> \
         (Optional[models.Users], Optional[messages.MessageQueue]):
     interface.clean_terminal_screen()
 
@@ -110,24 +111,24 @@ def admins_services(admins: models.Users, users: models.Users, account_number, f
         return None, feedbacks_messages
 
     if admin_choice == "1":
-        _display_user_information(admins.raw_data[account_number])
+        _display_user_information(admins.data[user_index])
 
     if admin_choice == "2":
-        admins = _update_information(admins, account_number)
+        admins = _update_information(admins, user_index)
 
     if admin_choice == "3":
-        users = _update_password(admins, account_number)
+        users = _update_password(admins, user_index)
 
     if admin_choice == "4":
-        users.delete_user(account_number)
+        users.delete_user(user_index)
         return None, feedbacks_messages
 
     if admin_choice == "5":
-        account_number = _get_account_number(users)
-        if not account_number:
+        user_index = _get_account_number(users)
+        if not user_index:
             return users, feedbacks_messages
 
-        _display_user_information(users.raw_data[account_number])
+        _display_user_information(users.raw_data[user_index])
 
     if admin_choice == "6":
         return None, None  # Implement later
@@ -148,19 +149,19 @@ def _display_user_information(user: dict) -> None:
     interface.display_horizontal_line()
 
     print("Here is your information. You are welcome!!!")
-    print("Full name: %s %s %s" % (user["last_name"], user["middle_name"], user["first_name"]))
-    print("Gender: %s" % user["gender"])
-    print("Date of birth: %s" % user["date_of_birth"])
-    print("Phone number: %s" % user["phone_number"])
-    print("Email: %s" % user["email"])
-    print("Account number: %s" % user["account_number"])
-    print("Issued date: %s" % user["issued_date"])
+    print("Full name: %s %s %s" % (user[LAST_NAME], user[MIDDLE_NAME], user[FIRST_NAME]))
+    print("Gender: %s" % user[GENDER])
+    print("Date of birth: %s" % user[DATE_OF_BIRTH])
+    print("Phone number: %s" % user[PHONE_NUMBER])
+    print("Email: %s" % user[EMAIL])
+    print("Account number: %s" % user[ACCOUNT_NUMBER])
+    print("Issued date: %s" % user[ISSUED_DATE])
 
     interface.display_horizontal_line()
     utils.proceed_next()
 
 
-def _update_information(users: models.Users, account_number: str) -> models.Users:
+def _update_information(users: models.Users, user_index: int) -> models.Users:
     print("What information you want to edit?")
     print("☞ Please choose among information listed below")
     print("  ┌─────────────┐  ╭────────────────────────╮        ")
@@ -201,7 +202,7 @@ def _update_information(users: models.Users, account_number: str) -> models.User
         if not first_name:
             return users
 
-        users.update_information(account_number, "first_name", first_name)
+        users.update_information(user_index, FIRST_NAME, first_name)
         print("Successfully update your first name!!!")
 
     if user_choice == "2":
@@ -209,7 +210,7 @@ def _update_information(users: models.Users, account_number: str) -> models.User
         if not middle_name:
             return users
 
-        users.update_information(account_number, "middle_name", middle_name)
+        users.update_information(user_index, MIDDLE_NAME, middle_name)
         print("Successfully update your middle name!!!")
 
     if user_choice == "3":
@@ -217,7 +218,7 @@ def _update_information(users: models.Users, account_number: str) -> models.User
         if not last_name:
             return users
 
-        users.update_information(account_number, "last_name", last_name)
+        users.update_information(user_index, LAST_NAME, last_name)
         print("Successfully update your last name!!!")
 
     if user_choice == "4":
@@ -225,7 +226,7 @@ def _update_information(users: models.Users, account_number: str) -> models.User
         if not gender:
             return users
 
-        users.update_information(account_number, "gender", gender)
+        users.update_information(user_index, GENDER, gender)
         print("Successfully update your gender!!!")
 
     if user_choice == "5":
@@ -233,7 +234,7 @@ def _update_information(users: models.Users, account_number: str) -> models.User
         if not date_of_birth:
             return users
 
-        users.update_information(account_number, "date_of_birth", date_of_birth)
+        users.update_information(user_index, DATE_OF_BIRTH, date_of_birth)
         print("Successfully update your date of birth!!!")
 
     if user_choice == "6":
@@ -241,7 +242,7 @@ def _update_information(users: models.Users, account_number: str) -> models.User
         if not phone_number:
             return users
 
-        users.update_information(account_number, "phone_number", phone_number)
+        users.update_information(user_index, PHONE_NUMBER, phone_number)
         print("Successfully update your phone number!!!")
 
     if user_choice == "7":
@@ -249,23 +250,23 @@ def _update_information(users: models.Users, account_number: str) -> models.User
         if not email:
             return users
 
-        users.update_information(account_number, "email", email)
+        users.update_information(user_index, EMAIL, email)
         print("Successfully update your email!!!")
 
     if user_choice == "8":
         return users
 
     print("Please check your new information")
-    _display_user_information(users.raw_data[account_number])
+    _display_user_information(users.data[user_index])
 
     return users
 
-def _update_password(users: models.Users, account_number: str) -> models.Users:
-    new_password = account.get_password(users.raw_data[account_number]["password"])
+def _update_password(users: models.Users, user_index: int) -> models.Users:
+    new_password = account.get_password(users.data[user_index][PASSWORD])
     if not new_password:
         return users
 
-    users.update_information(account_number, "password", new_password)
+    users.update_information(user_index, PASSWORD, new_password)
     print("Successfully update new password")
 
     return users
@@ -279,7 +280,7 @@ def _get_account_number(users: models.Users) -> str:
             failed_attempt -= 1
             print("Invalid account number, please, try it again!!!")
             print("You have %d try left!!!" % failed_attempt)
-        elif account_number not in users.raw_data:
+        elif account_number not in users.users_set:
             failed_attempt -= 1
             print("account number does not exist, please, try it again!!!")
             print("You have %d try left!!!" % failed_attempt)

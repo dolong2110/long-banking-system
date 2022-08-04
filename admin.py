@@ -11,7 +11,7 @@ if __name__ == '__main__':
 
     users = models.Users()
     while admin_data:
-        admin_data, feedbacks_messages = services.users_services(admin_data, account_number, feedbacks_messages)
+        admin_data, feedbacks_messages = services.admins_services(admin_data, account_number, feedbacks_messages)
 
         if feedbacks_messages:
             feedbacks_messages.update()

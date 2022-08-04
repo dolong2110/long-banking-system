@@ -4,13 +4,14 @@ from typing import List, Optional
 
 import maskpass
 
+import sorts
 from consts import *
 import utils
 import interface
 
 import models
 
-def authentication(privilege: str) -> (Optional[models.Users], str):
+def authentication(privilege: str) -> (Optional[models.Users], int):
     """
     login or create new banking account
     """
@@ -29,11 +30,11 @@ def authentication(privilege: str) -> (Optional[models.Users], str):
     print("  └─────────────┘  ╰──────────────────╯                  ")
 
 
-    failed_attempt = consts.FAILED_ATTEMPT
+    failed_attempt = FAILED_ATTEMPT
     user_choice = ""
     while failed_attempt:
         user_choice = input("☞ Enter your choice: ")
-        if user_choice not in consts.AUTHENTICATION_CHOICES:
+        if user_choice not in AUTHENTICATION_CHOICES:
             failed_attempt -= 1
             print("Wrong choice!!! Please choose only 1 to 3")
             print("You have %d try left!!!" % failed_attempt)
@@ -42,17 +43,18 @@ def authentication(privilege: str) -> (Optional[models.Users], str):
 
     if not failed_attempt:
         print("You enter wrong choice many times, please wait few minutes to do it again")
-        return None, ""
+        return None, -1
 
     users = models.Users(privilege)
-    account_number = ""
+    user_index = -1
 
     if user_choice == "1":
         print("You want to login your account")
+        account_number = ""
         failed_attempt = FAILED_ATTEMPT
         while failed_attempt:
             account_number = input("☞ Please enter your bank account: ")
-            if account_number not in users.data.users_dict:
+            if account_number not in users.users_set:
                 failed_attempt -= 1
                 print("Account does not exist!!! Please enter your own account")
                 print("You have %d try left!!!" % failed_attempt)
@@ -61,13 +63,18 @@ def authentication(privilege: str) -> (Optional[models.Users], str):
 
         if not failed_attempt:
             print("You enter wrong choice many times, please wait few minutes to login again")
-            return None, ""
+            return None, -1
 
-        user = users.raw_data[account_number]
+        user_index = sorts.binary_search(users.data, ACCOUNT_NUMBER, account_number)
+        if user_index == -1:
+            print("You enter wrong choice many times, please wait few minutes to login again")
+            return None, -1
+
+        user = users.data[user_index]
         print(utils.greeting())
         print(" %s" % account_number)
         failed_attempt = FAILED_ATTEMPT
-        hashed_password = user["password"]
+        hashed_password = user[PASSWORD]
         while failed_attempt:
             password = maskpass.askpass(prompt="☞ Please enter your password: ")
             if not utils.check_password(password, hashed_password):
@@ -79,7 +86,7 @@ def authentication(privilege: str) -> (Optional[models.Users], str):
 
         if not failed_attempt:
             print("You enter wrong password many times, please wait few minutes to login again")
-            return None, ""
+            return None, -1
 
         print("Successfully login!!!")
         print("Welcome back %s!!!" % user[FIRST_NAME])
@@ -90,7 +97,7 @@ def authentication(privilege: str) -> (Optional[models.Users], str):
 
         first_name = get_name(FIRST_NAME_MAX_LEN, FAILED_ATTEMPT, "first")
         if not first_name:
-            return None, ""
+            return None, -1
 
         # Some people may not have middle name
         middle_name = ""
@@ -98,25 +105,25 @@ def authentication(privilege: str) -> (Optional[models.Users], str):
 
         last_name = get_name(LAST_NAME_MAX_LEN, FAILED_ATTEMPT, "last")
         if not last_name:
-            return None, ""
+            return None, -1
 
         gender = get_gender(GENDER_SET_CHOICE)
         if not gender:
-            return None, ""
+            return None, -1
         
         date_of_birth = get_date_of_birth()
         if not date_of_birth:
-            return None, ""
+            return None, -1
 
         phone_number = get_phone_number()
         if not phone_number:
-            return None, ""
+            return None, -1
 
         email = get_email()
 
-        password = get_password("")
+        password = get_password(utils.generate_hashed_password(""))
         if not password:
-            return None, ""
+            return None, -1
 
         user_information = defaultdict(str)
         user_information[FIRST_NAME] = first_name
@@ -128,16 +135,16 @@ def authentication(privilege: str) -> (Optional[models.Users], str):
         user_information[EMAIL] = email
         user_information[PASSWORD] = password
         user_information[BALANCE] = "0"
-        account_number = users.create_new(user_information)
+        users.create_new(user_information)
 
         print("Successfully create new account!!!")
 
     if user_choice == "3":
-        return None, ""
+        return None, -1
 
     print("Move to the next step")
 
-    return users, account_number
+    return users, user_index
 
 def get_name(name_max_len: int, failed_attempt: int, kind: str) -> str:
     name = ""
@@ -166,7 +173,7 @@ def get_gender(gender_list: List[str]) -> str:
     print("  │             │  │ ▶︎ 3 • Others       │   ")
     print("  └─────────────┘  ╰─────────────────────╯   ")
     
-    failed_attempt = consts.FAILED_ATTEMPT
+    failed_attempt = FAILED_ATTEMPT
     gender = ""
     while failed_attempt:
         gender = input("☞ Please enter your choice about your gender: ")
@@ -243,7 +250,7 @@ def get_email() -> str:
         return ""
 
     email = ""
-    failed_attempt = consts.FAILED_ATTEMPT
+    failed_attempt = FAILED_ATTEMPT
     while failed_attempt:
         email = input("☞ Please enter your email: ")
         if not utils.is_valid_email(email):
@@ -261,7 +268,7 @@ def get_email() -> str:
 
 def get_password(previous_password: str) -> str:
     password = ""
-    failed_attempt = consts.FAILED_ATTEMPT
+    failed_attempt = FAILED_ATTEMPT
     while failed_attempt:
         password = maskpass.askpass(prompt="☞ Please enter your password. It should be at least 8 characters, "
                                     "contain numbers, lowercase, uppercase letters, and special characters: ")
@@ -295,4 +302,3 @@ def get_password(previous_password: str) -> str:
         password = ""
 
     return utils.generate_hashed_password(password)
-

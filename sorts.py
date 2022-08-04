@@ -1,3 +1,6 @@
+from typing import List
+
+
 class Sorting:
     
     def __init__(self, arr, field: str, method: str = ""):
@@ -5,7 +8,7 @@ class Sorting:
         self.field = field
         self.len = len(arr)
 
-        if len(arr) < 20 or method == "insertion_sort":
+        if self.len < 20 or method == "insertion_sort":
             self.insertion_sort()
             return
 
@@ -13,7 +16,7 @@ class Sorting:
             self.bubble_sort()
             return
 
-        if method == "counting_sort":
+        if self.len > 10**7 or method == "counting_sort":
             self.counting_sort()
             return
 
@@ -64,7 +67,7 @@ class Sorting:
         for i in range(1, self.len):
             current_index = i
 
-            while current_index > 0 and self.arr[current_index] < self.arr[current_index - 1]:
+            while current_index > 0 and self.arr[current_index][self.field] < self.arr[current_index - 1][self.field]:
                 # Swap elements that are out of order
                 self.arr[current_index], self.arr[current_index - 1] = \
                     self.arr[current_index - 1], self.arr[current_index]
@@ -106,7 +109,7 @@ class Sorting:
         """
         Sorts a list of integers where minimum value is 0 and maximum value is k
         Time complexity: O(N+k) - N is size of input, k is the maximum number in arr; Space complexity: O(N)
-        better when sorting numbers - id, account_number
+        better when sorting numbers - id, user_index
         """
         k = max(self.arr)
         counts = [0 for _ in range(k + 1)]
@@ -134,3 +137,25 @@ class Sorting:
         # it's fine to just return the sorted_lst at this point as well
         for i in range(self.len):
             self.arr[i] = sorted_lst[i]
+
+def binary_search(arr: List[dict], field: str, query: str) -> int:
+    """
+    A custom binary search implementation that:
+    (1) Assumes the input_list to have elements of type object
+       and then sorts by a common key in all those objects name
+       "field"
+    (2) Make the text lowercase and trims the text in the fields
+       so for example "foo bar" can match "FooBar"
+    """
+
+    low, high = 0, len(arr) - 1
+    while low <= high:
+        mid = (low + high) // 2
+        if arr[mid][field] > query:
+            high = mid - 1
+        elif arr[mid][field] < query:
+            low = mid + 1
+        else:
+            return mid
+
+    return -1
