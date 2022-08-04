@@ -14,8 +14,8 @@ class Users:
 
         self.privilege = privilege
         self.configs = ACCOUNT_CONFIGS[privilege]
-        raw_data = utils.get_data_from_json(self.configs[FILE_NAME])
-        sorting = sorts.Sorting(list(raw_data), ACCOUNT_NUMBER, "")
+        raw_data = list(utils.get_data_from_json(self.configs[FILE_NAME]))
+        sorting = sorts.Sorting(raw_data, ACCOUNT_NUMBER, "")
         self.data = sorting.arr
         self.users_set = set([account for account in self.data])
 
