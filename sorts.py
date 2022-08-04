@@ -1,14 +1,23 @@
 class Sorting:
     
-    def __init__(self, arr, field: str, method: str=""):
+    def __init__(self, arr, field: str, method: str = ""):
         self.arr = arr
         self.field = field
         self.len = len(arr)
 
-        # if len(arr) < 20:
-        #     insertion_sort()
-        # else:
-        #     heap_sort()
+        if len(arr) < 20 or method == "insertion_sort":
+            self.insertion_sort()
+            return
+
+        if method == "bubble":
+            self.bubble_sort()
+            return
+
+        if method == "counting_sort":
+            self.counting_sort()
+            return
+
+        self.heap_sort()
 
     def selection_sort(self) -> None:
         """
@@ -62,16 +71,45 @@ class Sorting:
                 current_index -= 1
 
     def heap_sort(self) -> None:
+        """
+        Mutates elements in lst by utilizing the heap data structure
+        Time complexity: O(NlogN); Space complexity: O()
+        A direct optimization of selection sort
+        """
+
+        # Time Complexity: O(logN)
+        def max_heapify(heap_size, index):
+            left, right = 2 * index + 1, 2 * index + 2
+            largest = index
+            if left < heap_size and self.arr[left] > self.arr[largest]:
+                largest = left
+            if right < heap_size and self.arr[right] > self.arr[largest]:
+                largest = right
+            if largest != index:
+                self.arr[index], self.arr[largest] = self.arr[largest], self.arr[index]
+                max_heapify(heap_size, largest)
+
+        # heapify original lst
+        for i in range(self.len // 2 - 1, -1, -1):
+            max_heapify(self.len, i)
+
+        # Time Complexity: O(N)
+        # use heap to sort elements
+        for i in range(self.len - 1, 0, -1):
+            # swap last element with first element
+            self.arr[i], self.arr[0] = self.arr[0], self.arr[i]
+            # note that we reduce the heap size by 1 every iteration
+            max_heapify(i, 0)
 
 
     def counting_sort(self) -> None:
         """
-        Sorts a list of integers where minimum value is 0 and maximum value is K
-        Time complexity: O(N+K) - N is size of input, K is the maximum number in arr; Space complexity: O(N)
+        Sorts a list of integers where minimum value is 0 and maximum value is k
+        Time complexity: O(N+k) - N is size of input, k is the maximum number in arr; Space complexity: O(N)
         better when sorting numbers - id, account_number
         """
-        K = max(self.arr)
-        counts = [0 for _ in range(K + 1)]
+        k = max(self.arr)
+        counts = [0 for _ in range(k + 1)]
         for element in self.arr:
             counts[element] += 1
 
@@ -96,5 +134,3 @@ class Sorting:
         # it's fine to just return the sorted_lst at this point as well
         for i in range(self.len):
             self.arr[i] = sorted_lst[i]
-
-    def
