@@ -18,11 +18,11 @@ def transaction_services(users: models.Users, account_number: str) -> models.Use
     print("  │             │  │ ▶︎ 4 • Exit      │               ")
     print("  └─────────────┘  ╰──────────────────╯                  ")
 
-    failed_attempt = consts.FAILED_ATTEMPT
+    failed_attempt = FAILED_ATTEMPT
     user_choice = ""
     while failed_attempt:
         user_choice = input("☞ Enter your choice: ")
-        if user_choice not in consts.USER_TRANSACTION_CHOICES:
+        if user_choice not in USER_TRANSACTION_CHOICES:
             failed_attempt -= 1
             print("Wrong choice!!! Please choose only from 1 to 4")
             print("You have %d try left!!!" % failed_attempt)

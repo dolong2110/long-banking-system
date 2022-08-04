@@ -62,7 +62,17 @@ class UsersData:
     def delete(self, account_number: str):
         self._remove(self.users_dict[account_number])
 
-    def _add(self, node: Optional[Node]) -> None:
+    def swap(self, node1: Node, node2: Node) -> None:
+        prev1, next1 = node1.prev, node1.next
+        prev2, next2 = node2.prev, node2.next
+
+        node1.prev, node1.next = prev2, next2
+        node2.prev, node2.next = prev1, next1
+
+        prev1.next, next1.prev = node1, node1
+        prev2.next, next2.prev = node2, node2
+
+    def _add(self, node: Node) -> None:
         """
         Internal method used to add new node
         """

@@ -269,4 +269,3 @@ if __name__ == '__main__':
     # print(is_valid_phone_number("012345678"))
     # print(is_valid_phone_number("1123456789"))
     # print(is_valid_phone_number("012345678a"))
-
