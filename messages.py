@@ -74,7 +74,7 @@ class MessageQueue:
 def add_message(messages: MessageQueue, account_number: str) -> MessageQueue:
     print("We are very appreciated to hear from your thinking, your satisfied, dis-satisfied, "
           "and the idea to help us improve!!!")
-    print(f"Your message should be less than {MESSAGE_MAX_CHARACTERS} characters and"
+    print(f"Your message should be less than {MESSAGE_MAX_CHARACTERS} characters and "
           f"less than {MESSAGE_MAX_WORDS} words")
     failed_attempt = FAILED_ATTEMPT
     message = ""
@@ -98,6 +98,7 @@ def add_message(messages: MessageQueue, account_number: str) -> MessageQueue:
     message_data[MESSAGE] = message
     message_data[TIMESTAMP] = str(timestamp)
     message_data[TIME] = str(time_now)
+    print(message_data)
 
     messages.enqueue(message_data)
 

@@ -1,4 +1,5 @@
 import os
+import time
 
 
 def clean_terminal_screen():
@@ -7,7 +8,8 @@ def clean_terminal_screen():
     clear command. Cls on windows and Clear on UNIX ones.
     """
 
-    os.system('cls' if os.name == 'nt' else 'clear')
+    os.system("cls" if os.name == "nt" else "clear")
+    time.sleep(0.2)
 
 def display_horizontal_line():
     """

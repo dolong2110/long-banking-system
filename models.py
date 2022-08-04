@@ -14,12 +14,12 @@ class Users:
 
         self.privilege = privilege
         self.configs = ACCOUNT_CONFIGS[privilege]
-        raw_data = list(utils.get_data_from_json(self.configs[FILE_NAME]))
+        raw_data = utils.get_data_from_json(self.configs[FILE_NAME])
         sorting = sorts.Sorting(raw_data, ACCOUNT_NUMBER, "")
-        self.data = sorting.arr
-        self.users_set = set([account for account in self.data])
+        self.data = sorting.arr if sorting.arr else []
+        self.users_set = set([account[ACCOUNT_NUMBER] for account in self.data])
 
-    def create_new(self, user_information: defaultdict[str]) -> None:
+    def create_new(self, user_information: defaultdict[str]) -> int:
         """
         Create new user with the given information
         """
@@ -34,6 +34,8 @@ class Users:
         self.data.append(user_information)
         self.users_set.add(new_account_number)
         utils.write_data_to_json(self.data, self.configs[FILE_NAME])
+
+        return len(self.data) - 1
 
 
     def delete_user(self, index: int) -> None:

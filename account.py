@@ -49,6 +49,10 @@ def authentication(privilege: str) -> (Optional[models.Users], int):
     user_index = -1
 
     if user_choice == "1":
+        if not users.data:
+            print("There are no account yet!!!")
+            return None, -1
+
         print("You want to login your account")
         account_number = ""
         failed_attempt = FAILED_ATTEMPT
@@ -135,7 +139,7 @@ def authentication(privilege: str) -> (Optional[models.Users], int):
         user_information[EMAIL] = email
         user_information[PASSWORD] = password
         user_information[BALANCE] = "0"
-        users.create_new(user_information)
+        user_index = users.create_new(user_information)
 
         print("Successfully create new account!!!")
 

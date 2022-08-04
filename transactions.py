@@ -9,14 +9,16 @@ import utils
 def transaction_services(users: models.Users, user_index: int) -> models.Users:
 
     print("Please choose which privilege of transaction you want!!!")
-    print("  ┌─────────────┐  ╭────────────────────────────╮        ")
-    print("  │             │  │ ▶︎ 1 • Transfer Money      │     ")
-    print("  │             │  ├───────────────────────────┬╯        ")
-    print("  │  L O N G    │  │ ▶︎ 2 • Deposit Money      │      ")
-    print("  │  T U A N    │  ├───────────────────────────┴─╮       ")
-    print("  │  B A N K    │  │ ▶︎ 3 • Withdraw Money       │    ")
+    print("  ┌─────────────┐  ╭───────────────────────────╮        ")
+    print("  │             │  │ ▶︎ 1 • Check Balance      │     ")
+    print("  │             │  ├───────────────────────────┴╮        ")
+    print("  │             │  │ ▶︎ 2 • Transfer Money      │      ")
+    print("  │  L O N G    │  ├───────────────────────────┬╯       ")
+    print("  │  T U A N    │  │ ▶︎ 3 • Deposit Money      │      ")
+    print("  │  B A N K    │  ├───────────────────────────┴─╮       ")
+    print("  │             │  │ ▶︎ 4 • Withdraw Money       │    ")
     print("  │             │  ├──────────────────┬──────────╯       ")
-    print("  │             │  │ ▶︎ 4 • Exit      │               ")
+    print("  │             │  │ ▶︎ 5 • Exit      │               ")
     print("  └─────────────┘  ╰──────────────────╯                  ")
 
     failed_attempt = FAILED_ATTEMPT
@@ -35,12 +37,18 @@ def transaction_services(users: models.Users, user_index: int) -> models.Users:
         return users
 
     if user_choice == "1":
+        print(f"Your current account balance is: {users.data[user_index][BALANCE]}")
+
+    if user_choice == "2":
         users = transfer_money(users, user_index)
         
-    if user_choice == "2":
+    if user_choice == "3":
         users = deposit_money(users, user_index)
 
     if user_choice == "4":
+        users = withdraw_money(users, user_index)
+
+    if user_choice == "5":
         print("Finish action!!!")
         return users
 
@@ -80,7 +88,7 @@ def deposit_money(users, user_index: int) -> models.Users:
         print("Finish action!!!")
         return users
 
-    users.update_information(user_index, BALANCE, str(expect_balance), ACCOUNT_CONFIGS["users"][FILE_NAME])
+    users.update_information(user_index, BALANCE, str(expect_balance))
     print("Successfully deposit the money!!!")
     print(f"Your balance now is: {expect_balance}")
 

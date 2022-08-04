@@ -6,6 +6,7 @@ if __name__ == '__main__':
     users_data, user_index = account.authentication("users")
     feedbacks_messages = None
     if users_data and user_index != -1:
+        print("Hello world")
         feedbacks_messages = messages.MessageQueue()
 
     while users_data:
