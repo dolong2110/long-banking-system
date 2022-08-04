@@ -33,7 +33,7 @@ class Sorting:
             min_index = i
             for j in range(i + 1, self.len):
                 # Update minimum index
-                if self.arr[j] < self.arr[min_index]:
+                if self.arr[j][self.field] < self.arr[min_index][self.field]:
                     min_index = j
 
             # Swap current index with minimum element in rest of list
@@ -51,7 +51,7 @@ class Sorting:
         while has_swapped:
             has_swapped = False
             for i in range(self.len - 1):
-                if self.arr[i] > self.arr[i + 1]:
+                if self.arr[i][self.field] > self.arr[i + 1][self.field]:
                     # Swap adjacent elements
                     self.arr[i], self.arr[i + 1] = self.arr[i + 1], self.arr[i]
                     has_swapped = True
@@ -84,12 +84,13 @@ class Sorting:
         def max_heapify(heap_size, index):
             left, right = 2 * index + 1, 2 * index + 2
             largest = index
-            if left < heap_size and self.arr[left] > self.arr[largest]:
+            if left < heap_size and self.arr[left][self.field] > self.arr[largest][self.field]:
                 largest = left
-            if right < heap_size and self.arr[right] > self.arr[largest]:
+            if right < heap_size and self.arr[right][self.field] > self.arr[largest][self.field]:
                 largest = right
             if largest != index:
-                self.arr[index], self.arr[largest] = self.arr[largest], self.arr[index]
+                self.arr[index][self.field], self.arr[largest][self.field] = \
+                    self.arr[largest][self.field], self.arr[index][self.field]
                 max_heapify(heap_size, largest)
 
         # heapify original lst

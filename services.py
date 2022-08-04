@@ -128,7 +128,7 @@ def admins_services(admins: models.Users, users: models.Users, user_index: int,
         if not user_index:
             return users, feedbacks_messages
 
-        _display_user_information(users.raw_data[user_index])
+        _display_user_information(users.data[user_index])
 
     if admin_choice == "6":
         return None, None  # Implement later
@@ -292,3 +292,6 @@ def _get_account_number(users: models.Users) -> str:
         phone_number = ""
 
     return account_number
+
+# def _get_user_information_by_field(users: models.Users) -> None:
+#

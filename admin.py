@@ -13,7 +13,7 @@ if __name__ == '__main__':
     while admin_data:
         admin_data, feedbacks_messages = services.admins_services(admin_data, account_number, feedbacks_messages)
 
-        if feedbacks_messages:
-            feedbacks_messages.update()
+    if feedbacks_messages:
+        feedbacks_messages.update()
 
-        print("Goodbye, see you soon!!!")
+    print("Goodbye, see you soon!!!")

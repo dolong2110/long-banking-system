@@ -38,6 +38,7 @@ def transaction_services(users: models.Users, user_index: int) -> models.Users:
 
     if user_choice == "1":
         print(f"Your current account balance is: {users.data[user_index][BALANCE]}")
+        utils.proceed_next()
 
     if user_choice == "2":
         users = transfer_money(users, user_index)
@@ -75,7 +76,7 @@ def deposit_money(users, user_index: int) -> models.Users:
 
     user = users.data[user_index]
     current_balance = user[BALANCE]
-    expect_balance = int(current_balance) + int(deposit)
+    expect_balance = float(current_balance) + float(deposit)
     print(f"After depositing your balance will be: {expect_balance}")
 
     print("Do you confirm to deposit?")
@@ -96,7 +97,7 @@ def deposit_money(users, user_index: int) -> models.Users:
 
 def withdraw_money(users: models.Users, user_index: int) -> models.Users:
     user = users.data[user_index]
-    current_balance = user[BALANCE]
+    current_balance = float(user[BALANCE])
     withdraw = _get_money(current_balance)
     if not withdraw:
         print("Failed to withdraw money from bank")
@@ -112,7 +113,7 @@ def withdraw_money(users: models.Users, user_index: int) -> models.Users:
         print("Finish action!!!")
         return users
 
-    expect_balance = int(current_balance) - int(withdraw)
+    expect_balance = float(current_balance) - float(withdraw)
     print(f"After withdrawing your balance will be: {expect_balance}")
 
     print("Do you confirm to withdraw?")
@@ -125,9 +126,11 @@ def withdraw_money(users: models.Users, user_index: int) -> models.Users:
         print("Finish action!!!")
         return users
 
-    users.update_information(user_index, BALANCE, str(expect_balance), USERS_DATA_PATH)
+    users.update_information(user_index, BALANCE, str(expect_balance))
     print("Successfully withdraw the money!!!")
     print(f"Your balance now is: {expect_balance}")
+
+    return users
 
 def _transfer_internal(users: models.Users, user_index: int) -> models.Users:
     failed_attempt = FAILED_ATTEMPT
@@ -200,8 +203,8 @@ def _transfer_internal(users: models.Users, user_index: int) -> models.Users:
     receiver_balance += transfer_money
     user_balance -= transfer_money
 
-    users.update_information(user_index, BALANCE, str(user_balance), USERS_DATA_PATH)
-    users.update_information(receiver_index, BALANCE, str(receiver_balance), USERS_DATA_PATH)
+    users.update_information(user_index, BALANCE, str(user_balance))
+    users.update_information(receiver_index, BALANCE, str(receiver_balance))
 
     print("Successfully transfer the money!!!")
     print(f"Your balance now is: {user_balance}")
