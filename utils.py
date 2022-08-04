@@ -31,7 +31,7 @@ def generate_hashed_password(plain_text_password: str) -> str:
     encrypted password with random salt using bcrypt algorithms
     """
 
-    return bcrypt.hashpw(str.encode(plain_text_password), bcrypt.gensalt(consts.SALT_LEN)).decode()
+    return bcrypt.hashpw(str.encode(plain_text_password), bcrypt.gensalt(SALT_LEN)).decode()
 
 def check_password(plain_text_password: str, hashed_password: str) -> bool:
     """
@@ -51,7 +51,7 @@ def is_valid_name(name: str, max_len: int) -> bool:
     return True
 
 def get_temporal(temporal: str, max_time: int) -> str:
-    failed_attempt = consts.FAILED_ATTEMPT
+    failed_attempt = FAILED_ATTEMPT
     time = ""
     while failed_attempt:
         time = input("☞ Please enter the %s you was born: " % temporal)
@@ -129,7 +129,7 @@ def is_valid_day(date: List[int], current_date: List[int]) -> bool:
     return True
 
 def is_valid_phone_number(phone_number: str) -> bool:
-    if len(phone_number) != consts.PHONE_NUMBER_LEN:
+    if len(phone_number) != PHONE_NUMBER_LEN:
         print("Phone number should have length %d\n" % 10)
         return False
 
@@ -149,11 +149,11 @@ def is_valid_email(email: str) -> bool:
     return True
 
 def is_valid_password(password: str) -> bool:
-    if len(password) < consts.MIN_PASSWORD_LEN:
+    if len(password) < MIN_PASSWORD_LEN:
         print("Password's length should be at least 8 characters!!!")
         return False
 
-    if len(password) > consts.MAX_PASSWORD_LEN:
+    if len(password) > MAX_PASSWORD_LEN:
         print("Password's length should be smaller or equal than 100 characters!!!")
         return False
 
@@ -214,13 +214,13 @@ def is_valid_balance(balance: str) -> bool:
     return True
 
 def is_valid_message(message: str) -> bool:
-    if len(message) > consts.MESSAGE_MAX_CHARACTERS:
-        print(f"Your message have more than {consts.MESSAGE_MAX_CHARACTERS} characters")
+    if len(message) > MESSAGE_MAX_CHARACTERS:
+        print(f"Your message have more than {MESSAGE_MAX_CHARACTERS} characters")
         return False
 
     words = message.split(" ")
-    if len(words) > consts.MESSAGE_MAX_WORDS:
-        print(f"Your message have more than {consts.MESSAGE_MAX_WORDS} characters")
+    if len(words) > MESSAGE_MAX_WORDS:
+        print(f"Your message have more than {MESSAGE_MAX_WORDS} characters")
         return False
 
     return True
