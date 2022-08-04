@@ -45,10 +45,13 @@ class Test(TestCase):
     # def test_is_valid_email(self):
     #     self.fail()
     #
-    #
-    # def test_is_valid_password(self):
-    #     self.fail()
-    #
+    
+    def test_is_valid_password(self):
+        self.assertTrue(is_valid_password("21101998Abc."))
+        self.assertFalse(is_valid_password("21101998Abc"))  # not have special characters
+        self.assertFalse(is_valid_password("21101998abc.")) # not have upper case letters
+
+    
     #
     # def test_is_valid_account_number(self):
     #     self.fail()
