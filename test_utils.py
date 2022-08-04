@@ -34,6 +34,8 @@ class Test(TestCase):
     #     self.fail()
     #
     #
+
+
     def test_is_valid_day(self):
         self.assertTrue(is_valid_day([26, 10, 2003], [4, 8, 2022])) 
         self.assertTrue(is_valid_day([18, 8, 1988], [4, 8, 2022]))
@@ -43,8 +45,8 @@ class Test(TestCase):
         self.assertFalse(is_valid_day([40, 5, 1967], [4, 8, 2022]))   # invalid day in that month
         self.assertFalse(is_valid_day([11, 15, 2008], [4, 8, 2022]))    # invalid month
         self.assertFalse(is_valid_day([3, 30, 2004], [4, 8, 2022]))   # invalid month
-        self.aseertFalse(is_valid_day([8, 0, 2009], [4, 8, 2022]))  # invalid month
-        
+        self.assertFalse(is_valid_day([8, 0, 2009], [4, 8, 2022]))  # invalid month
+
     #
     #
     # def test_is_valid_phone_number(self):
@@ -69,7 +71,8 @@ class Test(TestCase):
         self.assertFalse(is_valid_password("OPTIMIZATION@1234"))  # not have lower letters
         self.assertFalse(is_valid_password("tuandz"))  # not have enough characters
         self.assertFalse(is_valid_password("21101998Abc. "))  # not have space character
-        self.assertFalse(is_valid_password("_D3ns3J+c/3rD=FJ/$#/-hh~y4svT$8Kuner-aF&KD23ZXLrL#w-%aVKwc'fiz5kM7i=FRaHFyYB*6/aw8-rTda$RtWwxbUnwq`+tuan")) # having more than 100 characters
+        self.assertFalse(is_valid_password("_D3ns3J+c/3rD=FJ/$#/-hh~y4svT$8Kuner-aF&KD23ZXLrL#w-%aVKwc'fiz5kM7i="
+                                           "FRaHFyYB*6/aw8-rTda$RtWwxbUnwq`+tuan"))  # having more than 100 characters
 
     
     #

@@ -90,7 +90,7 @@ def is_valid_day(date: List[int], current_date: List[int]) -> bool:
 
     day, month, year = date
     if month < 1 or month > 12:
-        print("You enter invalid month\n")
+        print("You enter invalid month")
         return False
 
     max_day_in_month = 0
@@ -104,26 +104,26 @@ def is_valid_day(date: List[int], current_date: List[int]) -> bool:
         max_day_in_month = 28
 
     if day < 1 or day > max_day_in_month:
-        print("you enter invalid day in that month\n")
+        print("You enter invalid day in that month")
         return False
 
     # need 18 or higher to create
     if year > current_date[2] - 18:
-        print("You need to be 18 years old to create a new account\n")
+        print("You need to be 18 years old to create a new account")
         return False
 
     if year < current_date[2] - 18:
         return True
 
     if month > current_date[1]:
-        print("You need to be 18 years old to create a new account\n")
+        print("You need to be 18 years old to create a new account")
         return False
 
     if month < current_date[1]:
         return True
 
     if day < current_date[0]:
-        print("You need to be 18 years old to create a new account\n")
+        print("You need to be 18 years old to create a new account")
         return False
 
     return True
