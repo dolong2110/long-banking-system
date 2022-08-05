@@ -5,7 +5,7 @@ MESSAGES_DATA_PATH = "messages_data.json"
 FAILED_ATTEMPT = 5
 AUTHENTICATION_CHOICES = {"1", "2", "3"}
 USER_SERVICES_CHOICES = {"1", "2", "3", "4", "5", "6", "7"}
-ADMIN_SERVICES_CHOICES = {"1", "2", "3", "4", "5", "6", "7"}
+ADMIN_SERVICES_CHOICES = {"1", "2", "3", "4", "5", "6", "7", "8"}
 USER_UPDATE_INFORMATION_CHOICES = {"1", "2", "3", "4", "5", "6", "7", "8"}
 USER_TRANSACTION_CHOICES = {"1", "2", "3", "4"}
 YES_NO_CHOICES = {"1", "2"}
@@ -40,3 +40,6 @@ ISSUED_DATE = "issued_date"
 MESSAGE = "message"
 TIMESTAMP = "timestamp"
 TIME = "time"
+
+# ADMIN
+FIELDS_SEARCH = {"1": ACCOUNT_NUMBER, "2": BALANCE, "3": FIRST_NAME}

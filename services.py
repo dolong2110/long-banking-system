@@ -1,6 +1,7 @@
 from typing import Optional
 
 import account
+import sorts
 from consts import *
 import interface
 import messages
@@ -12,6 +13,7 @@ import utils
 def users_services(users: models.Users, user_index: int, feedbacks_messages: messages.MessageQueue) -> \
         (Optional[models.Users], Optional[messages.MessageQueue]):
     interface.clean_terminal_screen()
+    interface.display_horizontal_line()
 
     print("What do you want to do next?")
     print("☞ Please choose among options below")
@@ -74,6 +76,7 @@ def admins_services(admins: models.Users, users: models.Users, user_index: int,
                     feedbacks_messages: messages.MessageQueue) -> \
         (Optional[models.Users], Optional[messages.MessageQueue]):
     interface.clean_terminal_screen()
+    interface.display_horizontal_line()
 
     print("What operation do you want to do?")
     print("☞ Please choose among admins' options below")
@@ -124,14 +127,19 @@ def admins_services(admins: models.Users, users: models.Users, user_index: int,
         return None, feedbacks_messages
 
     if admin_choice == "5":
-        user_index = _get_account_number(users)
-        if not user_index:
+        account_number = _get_account_number(users)
+        if not account_number:
+            return users, feedbacks_messages
+
+        user_index = sorts.binary_search(users.data, ACCOUNT_NUMBER, account_number)
+        if user_index == -1:
+            print("Users not exists, please try again!!!")
             return users, feedbacks_messages
 
         _display_user_information(users.data[user_index])
 
     if admin_choice == "6":
-        return None, None  # Implement later
+        _get_user_information_by_field(users)
 
     if admin_choice == "7":
         feedbacks_messages = messages.read_message(feedbacks_messages)
@@ -276,7 +284,7 @@ def _get_account_number(users: models.Users) -> str:
     account_number = ""
     while failed_attempt:
         account_number = input("☞ Please enter the user's account number: ")
-        if not utils.is_valid_account_number(account_number, "admins"):
+        if not utils.is_valid_account_number(account_number, "users"):
             failed_attempt -= 1
             print("Invalid account number, please, try it again!!!")
             print("You have %d try left!!!" % failed_attempt)
@@ -293,5 +301,36 @@ def _get_account_number(users: models.Users) -> str:
 
     return account_number
 
-# def _get_user_information_by_field(users: models.Users) -> None:
-#
+def _get_user_information_by_field(users: models.Users) -> None:
+    print("☞ Please choose among options below")
+    print("  ┌─────────────┐  ╭────────────────────────────╮     ")
+    print("  │             │  │ ▶︎ 1 • Account Number      │   ")
+    print("  │  L O N G    │  ├─────────────────────┬──────╯     ")
+    print("  │  T U A N    │  │ ▶︎ 2 • Balance      │          ")
+    print("  │  B A N K    │  ├─────────────────────┴──╮         ")
+    print("  │             │  │ ▶︎ 3 • First Name      │       ")
+    print("  └─────────────┘  ╰────────────────────────╯          ")
+
+    failed_attempt = FAILED_ATTEMPT
+    user_choice = ""
+    while failed_attempt:
+        user_choice = input("☞ Please enter the user's account number: ")
+        if user_choice not in FIELDS_SEARCH:
+            failed_attempt -= 1
+            print(f"You cannot search by field: {field}, please, try it again!!!")
+            print("You have %d try left!!!" % failed_attempt)
+        else:
+            break
+
+    if not failed_attempt or not user_choice:
+        print("You enter invalid choice many times, please wait a few minutes to try it again!!!")
+        phone_number = ""
+
+    field = FIELDS_SEARCH[user_choice]
+    sort_data = sorts.Sorting(users.data, field, "").arr
+    if not sort_data:
+        print("There are no users at that time in database")
+        return
+
+    for user in sort_data:
+        _display_user_information(user)

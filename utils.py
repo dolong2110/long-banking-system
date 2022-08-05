@@ -226,7 +226,7 @@ def is_valid_message(message: str) -> bool:
     return True
 
 def proceed_next() -> None:
-    _ = input("Press anything if you want to proceed to the session")
+    _ = input("Press anything if you want to proceed to the next")
 
 def get_data_from_json(filename: str):
     """

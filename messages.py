@@ -22,6 +22,7 @@ class MessageQueue:
         self.head, self.tail = Node(head_data), Node(tail_data)
         self.head.next, self.tail.prev = self.tail, self.head
         self.size = 0
+        self.make_queue()
 
     def make_queue(self):
         for data in utils.get_data_from_json(MESSAGES_DATA_PATH):
@@ -50,7 +51,8 @@ class MessageQueue:
         self._remove(self.head.next)
 
     def update(self) -> None:
-        data_list = [data for data in utils.get_data_from_json(MESSAGES_DATA_PATH)]
+        data_list = []
+        # data_list = [data for data in utils.get_data_from_json(MESSAGES_DATA_PATH)]
         cur = self.head.next
         while cur != self.tail:
             data_list.append(cur.data)
@@ -108,9 +110,11 @@ def read_message(messages: MessageQueue) -> Optional[MessageQueue]:
     print("Let's see the users' feedback to improve our application")
     if not messages.size:
         print("There are no messages to read")
-        return None
+        utils.proceed_next()
+        return messages
 
     message_data = messages.get_front().data
+
     messages.dequeue()
     print(f"Messages from user: {message_data[ACCOUNT_NUMBER]}")
     utils.proceed_next()
