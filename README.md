@@ -33,7 +33,7 @@
 > Note: **Every user needs to create account and sign in to access the system. All the data must be stored in json (.json) files.**<br>
 
 [![](https://img.shields.io/badge/back%20to%20top-%E2%86%A9-red)](#-table-of-contents)
-<br><br>
+<br>
 
 ## 💻 System Design:
 👉 In this online banking system, there are 11 different menus, namely:
@@ -51,10 +51,14 @@
     - Customer Withdraw
     - Customer View
 
+[![](https://img.shields.io/badge/back%20to%20top-%E2%86%A9-red)](#-table-of-contents)
+<br>
 
 ## 📷 Screenshot:
 
 
+[![](https://img.shields.io/badge/back%20to%20top-%E2%86%A9-red)](#-table-of-contents)
+<br>
 
 ## Install:
 
@@ -115,8 +119,12 @@ py main.py
 py admin.py
 ```
 
-
+[![](https://img.shields.io/badge/back%20to%20top-%E2%86%A9-red)](#-table-of-contents)
+<br>
 
 ## 🙌 Support me!
 
 👉 If you find this project useful, **please ⭐ this repository 😆**!
+
+[![](https://img.shields.io/badge/back%20to%20top-%E2%86%A9-red)](#-table-of-contents)
+<br>
