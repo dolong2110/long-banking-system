@@ -25,7 +25,7 @@
     - Can **do basic authentication** such as login, create, delete
     - Can **view and search customer profile**
     - Can **read customers' feedback**
-2 **User**:
+2. **User**:
     - Can **do basic authentication**  such as login, create, delete
     - Can **do the transactions**
     - Can **send the feedbacks**
