@@ -62,7 +62,6 @@
 
 ## Install:
 
----
 
 - First clone the repo
 
