@@ -12,7 +12,7 @@
   - [About Project](#-about-project)
   - [System Design](#-system-design)
   - [Screenshot](#-screenshot)
-  - [Install](#-install)
+  - [Install](#-Install)
 
 <br>
 
@@ -33,7 +33,7 @@
 > Note: **Every user needs to create account and sign in to access the system. All the data must be stored in json (.json) files.**<br>
 
 [![](https://img.shields.io/badge/back%20to%20top-%E2%86%A9-red)](#-table-of-contents)
-<br>
+<br><br>
 
 ## 💻 System Design:
 👉 In this online banking system, there are 11 different menus, namely:
@@ -50,13 +50,13 @@
     - Customer Deposit 
     - Customer Withdraw
     - Customer View
-
+<br><br>
 [![](https://img.shields.io/badge/back%20to%20top-%E2%86%A9-red)](#-table-of-contents)
-<br>
+<br><br>
 
 ## 📷 Screenshot:
 
-
+<br><br>
 [![](https://img.shields.io/badge/back%20to%20top-%E2%86%A9-red)](#-table-of-contents)
 <br><br>
 
@@ -118,8 +118,9 @@ py main.py
 py admin.py
 ```
 
+<br><br>
 [![](https://img.shields.io/badge/back%20to%20top-%E2%86%A9-red)](#-table-of-contents)
-<br>
+<br><br>
 
 ## 🙌 Support me!
 
