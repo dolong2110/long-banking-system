@@ -128,7 +128,7 @@ dmypy.json
 # Pyre type checker
 .pyre/
 
-# folder, file in project
+# folders, files in project
 .idea
 /bank-system-env
 users_data.json
