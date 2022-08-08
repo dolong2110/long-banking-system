@@ -12,7 +12,7 @@
   - [About Project](#-about-project)
   - [System Design](#-system-design)
   - [Screenshot](#-screenshot)
-  - [Install](#-Install)
+  - [Install](#-install)
 
 <br>
 
@@ -61,8 +61,6 @@
 <br><br>
 
 ## Install:
-
-
 - First clone the repo
 
 ```
